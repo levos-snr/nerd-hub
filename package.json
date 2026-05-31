@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@9.15.4",
+  "packageManager": "pnpm@11.5.0",
   "engines": {
-    "node": ">=20.0.0",
-    "pnpm": ">=9.0.0"
+    "node": ">=22.0.0",
+    "pnpm": ">=11.0.0"
   },
   "scripts": {
     "dev": "vite dev",
@@ -24,7 +24,7 @@
     "db:studio": "node --env-file=.env ./node_modules/drizzle-kit/bin.cjs studio",
     "db:promote-admin": "node --env-file=.env --import tsx src/db/seeds/promote-admin.ts",
     "db:sync-modules": "node --env-file=.env --import tsx src/db/seeds/sync-modules.ts",
-    "clean": "rm -rf node_modules pnpm-lock.yaml && pnpm install"
+    "clean": "rm -rf node_modules pnpm-lock.yaml && pnpm install --config.minimumReleaseAge=0"
   },
   "dependencies": {
     "@better-auth/drizzle-adapter": "^1.6.11",
