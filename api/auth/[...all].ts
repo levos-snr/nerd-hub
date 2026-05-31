@@ -1,4 +1,6 @@
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "../../src/features/auth/auth.server";
 
-export default toNodeHandler(auth);
+const handler = toNodeHandler(auth);
+export default handler;
+export const config = { api: { bodyParser: false } };
