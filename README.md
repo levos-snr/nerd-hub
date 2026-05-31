@@ -81,18 +81,22 @@ DATABASE_URL=postgresql://USER:PASSWORD@HOST/DB?sslmode=require
 ```bash
 pnpm install
 pnpm db:migrate
+pnpm db:sync-modules
 pnpm dev
 ```
 
 Open: [http://localhost:3000](http://localhost:3000)
 
+Check database connectivity: `GET http://localhost:3000/api/health` → `{ "ok": true, "db": { "ok": true } }`
+
 ### Local flow
 
 1. Sign up with email/password
 2. Open first unlocked module
-3. Answer quiz and submit
-4. Pass quiz (>=70%) to unlock next module
-5. Progress is saved to Postgres via `/api/progress` and `/api/submit-quiz`
+3. Complete the coding challenge (run tests, then submit)
+4. Answer quiz and submit
+5. Pass quiz (>=70%) to unlock next module
+6. Progress is saved to Postgres via `/api/progress` and `/api/submit-quiz`
 
 ### Promote an admin user
 

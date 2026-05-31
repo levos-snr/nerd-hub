@@ -30,7 +30,15 @@ const moduleSchema = z.object({
   challenge: z.object({
     prompt: z.string(),
     starterCode: z.string(),
-    expectedOutcome: z.string(),
+    language: z.enum(["javascript", "typescript"]),
+    tests: z.array(
+      z.object({
+        label: z.string(),
+        input: z.unknown(),
+        expected: z.unknown(),
+      })
+    ),
+    hint: z.string().optional(),
   }),
 });
 

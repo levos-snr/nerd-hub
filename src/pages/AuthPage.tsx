@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { AppShell } from "../components/layout/AppShell";
 import { signIn, signUp } from "../features/auth/client";
-import { useAuth } from "../providers/AuthProvider";
+import { LoadingButton } from "../components/ui/LoadingButton";
+import { useAuth } from "../hooks/useAuth";
 
 type Mode = "signin" | "signup";
 
@@ -31,7 +32,7 @@ export function AuthPage({ mode }: { mode: Mode }) {
   }
 
   return (
-    <AppShell user={user}>
+    <AppShell user={user} variant="marketing">
       <div className="mx-auto max-w-md glass p-6">
         <h1 className="mb-2 text-2xl font-bold">{mode === "signup" ? "Create account" : "Welcome back"}</h1>
         <p className="mb-4 text-sm text-[var(--muted)]">Secure auth powered by Better Auth + Postgres sessions.</p>
@@ -41,9 +42,9 @@ export function AuthPage({ mode }: { mode: Mode }) {
         <input className="input mb-3" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <input className="input mb-4" placeholder="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         {error ? <p className="mb-3 text-sm text-[var(--danger)]">{error}</p> : null}
-        <button className="btn btn-primary w-full" disabled={loading} onClick={() => void submit()}>
-          {loading ? "Please wait..." : mode === "signup" ? "Sign up" : "Sign in"}
-        </button>
+        <LoadingButton className="w-full" loading={loading} onClick={() => void submit()}>
+          {mode === "signup" ? "Sign up" : "Sign in"}
+        </LoadingButton>
         <p className="mt-4 text-sm text-[var(--muted)]">
           {mode === "signup" ? "Already have an account?" : "New here?"}{" "}
           <Link to={mode === "signup" ? "/signin" : "/signup"} className="text-white underline">

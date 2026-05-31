@@ -2,12 +2,13 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 import { randomUUID } from "node:crypto";
 import { eq } from "drizzle-orm";
 import { scoreQuiz } from "../src/features/assessment/quiz";
-import { registerAttempt, type LearnerState } from "../src/features/gamification/engine";
+import { canUnlockModule, createInitialState, registerAttempt } from "../src/features/gamification/engine";
 import { getSessionUser } from "../src/server/auth/session";
 import { getDb } from "../src/server/db/client";
 import { learnerProgress } from "../src/server/db/schema";
 import { getModuleById } from "../src/server/modules/repository";
 import { json, readJsonBody } from "../src/server/api-utils";
+import { learnerStateToRowFields, rowToLearnerState } from "../src/server/progress/state";
 
 type SubmitPayload = { moduleId: string; answers: number[] };
 
@@ -35,15 +36,12 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     const db = getDb();
     const [existing] = await db.select().from(learnerProgress).where(eq(learnerProgress.userId, user.id)).limit(1);
 
-    const currentState: LearnerState = existing
-      ? {
-          xp: existing.xp,
-          streak: existing.streak,
-          level: existing.level,
-          completedModuleIds: existing.completedModuleIds,
-          progress: existing.progress as LearnerState["progress"],
-        }
-      : emptyState;
+    const currentState = existing ? rowToLearnerState(existing) : createInitialState();
+
+    if (!canUnlockModule(module, currentState.completedModuleIds)) {
+      json(res, 403, { error: "Module is locked" });
+      return;
+    }
 
     const nextState = registerAttempt(currentState, module, score);
 
@@ -51,23 +49,12 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       await db.insert(learnerProgress).values({
         id: randomUUID(),
         userId: user.id,
-        xp: nextState.xp,
-        streak: nextState.streak,
-        level: nextState.level,
-        completedModuleIds: nextState.completedModuleIds,
-        progress: nextState.progress,
+        ...learnerStateToRowFields(nextState),
       });
     } else {
       await db
         .update(learnerProgress)
-        .set({
-          xp: nextState.xp,
-          streak: nextState.streak,
-          level: nextState.level,
-          completedModuleIds: nextState.completedModuleIds,
-          progress: nextState.progress,
-          updatedAt: new Date(),
-        })
+        .set({ ...learnerStateToRowFields(nextState), updatedAt: new Date() })
         .where(eq(learnerProgress.id, existing.id));
     }
 
@@ -76,11 +63,3 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     json(res, 500, { error: error instanceof Error ? error.message : "Submit quiz failed" });
   }
 }
-
-const emptyState: LearnerState = {
-  xp: 0,
-  streak: 0,
-  level: 1,
-  completedModuleIds: [],
-  progress: {},
-};

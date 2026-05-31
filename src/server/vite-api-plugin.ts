@@ -1,11 +1,8 @@
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Plugin, ViteDevServer } from "vite";
 
 type ApiHandler = (req: IncomingMessage, res: ServerResponse) => void | Promise<void>;
-
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 
 async function loadHandler(server: ViteDevServer, relativePath: string): Promise<ApiHandler> {
   const id = path.posix.join("/", relativePath.replace(/\\/g, "/"));
@@ -30,6 +27,12 @@ export function vercelApiDevPlugin(): Plugin {
             return;
           }
 
+          if (pathname === "/api/health") {
+            const handler = await loadHandler(server, "api/health.ts");
+            await handler(req, res);
+            return;
+          }
+
           if (pathname === "/api/modules") {
             const handler = await loadHandler(server, "api/modules.ts");
             await handler(req, res);
@@ -38,6 +41,12 @@ export function vercelApiDevPlugin(): Plugin {
 
           if (pathname === "/api/progress") {
             const handler = await loadHandler(server, "api/progress.ts");
+            await handler(req, res);
+            return;
+          }
+
+          if (pathname === "/api/submit-challenge") {
+            const handler = await loadHandler(server, "api/submit-challenge.ts");
             await handler(req, res);
             return;
           }

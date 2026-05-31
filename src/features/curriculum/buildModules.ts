@@ -1,9 +1,9 @@
-import { getTopicContent } from "./content";
-import { mixedSyllabus } from "./syllabus";
+import { getTopicContent } from "./getTopicContent";
+import { w3Syllabus } from "./w3syllabus";
 import type { Module } from "./types";
 
 export function buildMixedModules(): Module[] {
-  return mixedSyllabus.map((item, index) => {
+  return w3Syllabus.map((item, index) => {
     const id = `module-${index + 1}`;
     const prerequisites = index === 0 ? [] : [`module-${index}`];
     const difficulty =
@@ -11,6 +11,7 @@ export function buildMixedModules(): Module[] {
       index < 45 ? "intermediate" :
       index < 60 ? "advanced" : "pro";
     const content = getTopicContent(item.title, item.track);
+    const language = item.track;
 
     return {
       id,
@@ -21,7 +22,7 @@ export function buildMixedModules(): Module[] {
       passScore: 70,
       lesson: {
         id: `${id}-lesson`,
-        title: `${item.title} — real-world lesson`,
+        title: item.title,
         content: content.summary,
         objectives: content.objectives,
         example: content.example,
@@ -29,9 +30,9 @@ export function buildMixedModules(): Module[] {
       quiz: [
         {
           id: `${id}-q1`,
-          prompt: `In ${item.title}, what is the most practical first step?`,
-          options: ["Memorize syntax only", "Build a tiny real example", "Skip fundamentals", "Avoid typing"],
-          answerIndex: 1,
+          prompt: content.quizQ1?.prompt ?? `What is the key idea behind ${item.title}?`,
+          options: content.quizQ1?.options ?? ["Syntax only", "Practical behavior", "CSS", "Git"],
+          answerIndex: content.quizQ1?.answerIndex ?? 1,
         },
         {
           id: `${id}-q2`,
@@ -41,15 +42,17 @@ export function buildMixedModules(): Module[] {
         },
         {
           id: `${id}-q3`,
-          prompt: `How does ${item.title} connect JS and TS together?`,
-          options: ["It does not", "By applying concepts in both languages", "Only in backend", "Only in CSS"],
-          answerIndex: 1,
+          prompt: content.quizQ3?.prompt ?? `How does ${item.title} relate to real projects?`,
+          options: content.quizQ3?.options ?? ["It does not", "You apply it in code", "Only design", "Only tests"],
+          answerIndex: content.quizQ3?.answerIndex ?? 1,
         },
       ],
       challenge: {
         prompt: content.challengePrompt,
-        starterCode: item.track === "javascript" ? content.starterCodeJs : content.starterCodeTs,
-        expectedOutcome: "Passes challenge checks and follows production-ready patterns.",
+        starterCode: language === "javascript" ? content.starterCodeJs : content.starterCodeTs,
+        language,
+        tests: content.tests,
+        hint: content.hint,
       },
     };
   });

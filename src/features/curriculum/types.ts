@@ -15,6 +15,20 @@ export type QuizQuestion = {
   answerIndex: number;
 };
 
+export type ChallengeTest = {
+  label: string;
+  input: unknown;
+  expected: unknown;
+};
+
+export type Challenge = {
+  prompt: string;
+  starterCode: string;
+  language: "javascript" | "typescript";
+  tests: ChallengeTest[];
+  hint?: string;
+};
+
 export type Module = {
   id: string;
   track: Track;
@@ -23,10 +37,6 @@ export type Module = {
   prerequisites: string[];
   lesson: Lesson;
   quiz: QuizQuestion[];
-  challenge: {
-    prompt: string;
-    starterCode: string;
-    expectedOutcome: string;
-  };
+  challenge: Challenge;
   passScore: number;
 };

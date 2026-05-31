@@ -1,12 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { AppShell } from "../components/layout/AppShell";
-import { useAuth } from "../providers/AuthProvider";
+import { useAuth } from "../hooks/useAuth";
 
 export function LandingPage() {
   const { user } = useAuth();
 
   return (
-    <AppShell user={user}>
+    <AppShell user={user} variant="marketing">
       <section className="grid gap-8 py-10 md:grid-cols-2 md:items-center">
         <div>
           <p className="badge mb-3">Mixed JS + TS syllabus</p>

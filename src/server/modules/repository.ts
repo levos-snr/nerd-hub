@@ -1,11 +1,14 @@
 import { asc, eq } from "drizzle-orm";
 import { defaultModules } from "../../features/curriculum/buildModules";
+import { normalizeModule, setDefaultModulesLookup } from "../../features/curriculum/normalizeModule";
 import type { Module } from "../../features/curriculum/types";
+
+setDefaultModulesLookup(defaultModules);
 import { getDb } from "../db/client";
 import { curriculumModules as modulesTable } from "../db/schema";
 
 function rowToModule(row: typeof modulesTable.$inferSelect): Module {
-  return row.payload as unknown as Module;
+  return normalizeModule(row.payload as unknown as Module);
 }
 
 export async function ensureModulesSeeded(): Promise<void> {
@@ -66,4 +69,13 @@ export async function upsertModule(module: Module, orderIndex: number): Promise<
 export async function deleteModule(id: string): Promise<void> {
   const db = getDb();
   await db.delete(modulesTable).where(eq(modulesTable.id, id));
+}
+
+export async function syncModulesFromSource(): Promise<{ upserted: number }> {
+  let upserted = 0;
+  for (const [index, module] of defaultModules.entries()) {
+    await upsertModule(module, index);
+    upserted++;
+  }
+  return { upserted };
 }

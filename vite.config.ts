@@ -8,6 +8,10 @@ export default defineConfig(({ mode }) => {
   process.env.DATABASE_URL = process.env.DATABASE_URL ?? env.DATABASE_URL;
   process.env.BETTER_AUTH_SECRET = process.env.BETTER_AUTH_SECRET ?? env.BETTER_AUTH_SECRET;
   process.env.BETTER_AUTH_URL = process.env.BETTER_AUTH_URL ?? env.BETTER_AUTH_URL ?? "http://localhost:3000";
+  const dbUrl = process.env.DATABASE_URL ?? "";
+  if (!process.env.DATABASE_DRIVER && (dbUrl.includes("neon.tech") || dbUrl.includes("neon.database"))) {
+    process.env.DATABASE_DRIVER = "neon-http";
+  }
 
   return {
     plugins: [react(), tailwindcss(), vercelApiDevPlugin()],

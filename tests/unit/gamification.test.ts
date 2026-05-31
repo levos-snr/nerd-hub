@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createInitialState, registerAttempt, canUnlockModule } from "../../src/features/gamification/engine";
+import { utcToday } from "../../src/features/gamification/dailyStreak";
 import { curriculumModules } from "../../src/features/curriculum/modules";
 
 describe("gamification engine", () => {
@@ -16,5 +17,15 @@ describe("gamification engine", () => {
     expect(next.xp).toBe(100);
     expect(next.completedModuleIds).toContain(module.id);
     expect(next.progress[module.id].passed).toBe(true);
+    expect(next.streak).toBe(1);
+    expect(next.lastActivityDate).toBeDefined();
+  });
+
+  it("does not reset streak on failed quiz", () => {
+    const module = curriculumModules[0];
+    const state = { ...createInitialState(), streak: 3, lastActivityDate: utcToday() };
+    const next = registerAttempt(state, module, 40);
+    expect(next.streak).toBe(3);
+    expect(next.completedModuleIds).toHaveLength(0);
   });
 });

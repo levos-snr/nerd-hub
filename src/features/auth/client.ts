@@ -5,12 +5,41 @@ export type AuthUser = {
   role?: string;
 };
 
-async function parseResponse<T>(response: Response): Promise<T> {
-  const data = (await response.json().catch(() => ({}))) as T & { message?: string; error?: string };
-  if (!response.ok) {
-    throw new Error(data.message ?? data.error ?? `Request failed (${response.status})`);
+function mapAuthError(status: number, body: string): string {
+  const lower = body.toLowerCase();
+  if (
+    lower.includes("etimedout") ||
+    lower.includes("econnrefused") ||
+    lower.includes("cannot reach database") ||
+    lower.includes("drizzlequeryerror") ||
+    lower.includes("failed query")
+  ) {
+    return "Cannot reach the database. Check DATABASE_URL, run pnpm db:migrate, and try GET /api/health.";
   }
-  return data;
+  if (status === 422 && (lower.includes("already") || lower.includes("exists"))) {
+    return "An account with this email already exists. Try signing in.";
+  }
+  if (status === 401 || lower.includes("invalid") || lower.includes("credentials")) {
+    return "Invalid email or password.";
+  }
+  if (lower.includes("server_error") || status >= 500) {
+    return "Server error. Check database connection and auth configuration.";
+  }
+  return body || `Request failed (${status})`;
+}
+
+async function parseResponse(response: Response): Promise<void> {
+  const text = await response.text();
+  let data: { message?: string; error?: string; code?: string } = {};
+  try {
+    data = JSON.parse(text) as typeof data;
+  } catch {
+    data = { message: text };
+  }
+  if (!response.ok) {
+    const raw = data.message ?? data.error ?? data.code ?? text;
+    throw new Error(mapAuthError(response.status, raw));
+  }
 }
 
 export async function getSession(): Promise<AuthUser | null> {

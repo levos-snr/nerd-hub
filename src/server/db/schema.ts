@@ -72,5 +72,6 @@ export const learnerProgress = pgTable("learner_progress", {
   level: integer("level").notNull().default(1),
   completedModuleIds: jsonb("completed_module_ids").$type<string[]>().notNull().default([]),
   progress: jsonb("progress").$type<Record<string, unknown>>().notNull().default({}),
+  lastActivityDate: text("last_activity_date"),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 });

@@ -13,7 +13,9 @@ export function AppHeader({ user }: Props) {
         <nav className="hidden items-center gap-4 text-sm text-[var(--muted)] md:flex">
           <Link to="/dashboard" className="hover:text-white">Dashboard</Link>
           <Link to="/learn" className="hover:text-white">Learn</Link>
-          {user?.role === "admin" ? <Link to="/admin" className="hover:text-white">Admin</Link> : null}
+          {user?.role === "admin" || user?.role === "owner" ? (
+            <Link to="/admin" className="hover:text-white">Admin</Link>
+          ) : null}
         </nav>
       </div>
       <div className="flex items-center gap-3">
