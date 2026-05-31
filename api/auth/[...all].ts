@@ -1,5 +1,5 @@
 import { toNodeHandler } from "better-auth/node";
-import { auth } from "../../src/features/auth/auth.server.js";
+import { auth } from "../../src/features/auth/auth.server";
 import type { IncomingMessage, ServerResponse } from "node:http";
 
 const handler = toNodeHandler(auth);
