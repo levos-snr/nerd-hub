@@ -8,3 +8,8 @@ onlyBuiltDependencies:
   - esbuild
 strictDepBuilds: false
 minimumReleaseAge: 0
+
+overrides:
+  lodash: "^4.18.1"
+  lodash-es: "^4.18.1"
+  esbuild: "^0.25.0"
