@@ -15,7 +15,6 @@
   ],
   "functions": {
     "api/**/*.ts": {
-      "runtime": "nodejs22.x",
       "includeFiles": "src/**"
     }
   }
