@@ -8,3 +8,5 @@ playwright-report
 curriculum.seed.json
 *.log
 api-dist/
+api/**/*.js
+api/**/*.cjs

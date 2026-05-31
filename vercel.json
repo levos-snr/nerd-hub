@@ -3,49 +3,8 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
-      "source": "/api/auth/(.*)",
-      "destination": "/api-dist/auth/[...all].js"
-    },
-    {
-      "source": "/api/admin/progress(.*)",
-      "destination": "/api-dist/admin/progress.js"
-    },
-    {
-      "source": "/api/admin/modules(.*)",
-      "destination": "/api-dist/admin/modules.js"
-    },
-    {
-      "source": "/api/admin/sync",
-      "destination": "/api-dist/admin/sync.js"
-    },
-    {
-      "source": "/api/progress(.*)",
-      "destination": "/api-dist/progress.js"
-    },
-    {
-      "source": "/api/quiz",
-      "destination": "/api-dist/quiz.js"
-    },
-    {
-      "source": "/api/challenge",
-      "destination": "/api-dist/challenge.js"
-    },
-    {
-      "source": "/api/modules",
-      "destination": "/api-dist/modules.js"
-    },
-    {
-      "source": "/api/health",
-      "destination": "/api-dist/health.js"
-    },
-    {
-      "source": "/((?!api).*)",
+      "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
-  ],
-  "functions": {
-    "api-dist/**/*.js": {
-      "includeFiles": "api-dist/**"
-    }
-  }
+  ]
 }

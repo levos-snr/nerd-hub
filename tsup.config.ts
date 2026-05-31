@@ -2,7 +2,6 @@ import { defineConfig } from "tsup";
 import { readdirSync, statSync } from "fs";
 import { join } from "path";
 
-// Collect all .ts files under /api recursively
 function collectEntries(dir: string): string[] {
   const entries: string[] = [];
   for (const file of readdirSync(dir)) {
@@ -18,13 +17,12 @@ function collectEntries(dir: string): string[] {
 
 export default defineConfig({
   entry: collectEntries("api"),
-  outDir: "api-dist",
+  outDir: "api",
   format: ["cjs"],
   target: "node22",
   splitting: false,
   bundle: true,
   sourcemap: false,
   dts: false,
-  // Keep each file as its own output matching the input structure
   outExtension: () => ({ js: ".js" }),
 });
