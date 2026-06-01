@@ -1,7 +1,7 @@
 import type { TopicContent } from "./topicTypes";
 import { tsProWorkshopTopics, w3JavaScriptTopics, w3TypeScriptTopics } from "./w3syllabus";
 
-/** Topic-specific lessons & exercises (original content, W3Schools-aligned topics) */
+
 export const w3ExerciseRegistry: Record<string, Partial<TopicContent>> = {
   "JS Tutorial": {
     summary: "JavaScript powers interactive web pages. You run it in the browser console or in .js files loaded by HTML.",
