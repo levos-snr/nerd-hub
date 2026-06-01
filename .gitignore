@@ -7,6 +7,5 @@ test-results
 playwright-report
 curriculum.seed.json
 *.log
-api-dist/
-api/**/*.js
-api/**/*.cjs
+.vercel/output
+.output

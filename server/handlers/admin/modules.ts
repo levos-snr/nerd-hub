@@ -1,9 +1,10 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { z } from "zod";
-import type { Module } from "../../src/features/curriculum/types";
-import { getSessionUser, requireAdmin } from "../../src/server/auth/session";
-import { deleteModule, listModules, upsertModule } from "../../src/server/modules/repository";
-import { json, readJsonBody } from "../../src/server/api-utils";
+import type { Module } from "../../../src/features/curriculum/types";
+import { getSessionUser, requireAdmin } from "../../../src/server/auth/session";
+import { applyRateLimit } from "../../../src/server/security/apiGuard";
+import { deleteModule, listModules, upsertModule } from "../../../src/server/modules/repository";
+import { json, readJsonBody } from "../../../src/server/api-utils";
 
 const moduleSchema = z.object({
   id: z.string().min(1),
@@ -18,6 +19,7 @@ const moduleSchema = z.object({
     content: z.string(),
     objectives: z.array(z.string()),
     example: z.string(),
+    clue: z.string().optional(),
   }),
   quiz: z.array(
     z.object({
@@ -43,6 +45,8 @@ const moduleSchema = z.object({
 });
 
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
+  if (!applyRateLimit(req, res)) return;
+
   try {
     const user = await getSessionUser(req);
     if (!requireAdmin(user)) {

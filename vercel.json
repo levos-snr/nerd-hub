@@ -1,15 +1,5 @@
 {
   "buildCommand": "pnpm build",
-  "outputDirectory": "dist",
-  "functions": {
-    "api/**/*.ts": {
-      "includeFiles": "src/**"
-    }
-  },
-  "rewrites": [
-    {
-      "source": "/((?!api/).*)",
-      "destination": "/index.html"
-    }
-  ]
+  "outputDirectory": ".vercel/output",
+  "framework": null
 }

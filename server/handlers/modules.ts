@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { listModules } from "../src/server/modules/repository";
-import { json } from "../src/server/api-utils";
+import { listModules } from "../../src/server/modules/repository";
+import { json } from "../../src/server/api-utils";
 
 export default async function handler(_req: IncomingMessage, res: ServerResponse) {
   try {

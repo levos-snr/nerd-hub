@@ -5,6 +5,7 @@ import { HeroStats } from "../components/dashboard/HeroStats";
 import { ProgressRing } from "../components/dashboard/ProgressRing";
 import { RecentActivity } from "../components/dashboard/RecentActivity";
 import { StreakFlame } from "../components/dashboard/StreakFlame";
+import { WelcomeBanner } from "../components/dashboard/WelcomeBanner";
 import { useModules } from "../db/collections/useModules";
 import { useProgress } from "../db/collections/useProgress";
 import {
@@ -37,12 +38,7 @@ export function DashboardPage() {
 
   return (
     <AppShell user={user}>
-      <section className="mb-8">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="text-[var(--muted)]">
-          {started ? "Pick up where you left off." : "Welcome! Start your first module when you're ready."}
-        </p>
-      </section>
+      <WelcomeBanner name={user?.name ?? "Learner"} started={started} progressPct={progressPct} />
 
       <div className="mb-8">
         <HeroStats

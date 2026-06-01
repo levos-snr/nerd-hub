@@ -4,6 +4,7 @@ import type { AuthUser } from "../features/auth/client";
 export type AuthContextValue = {
   user: AuthUser | null;
   loading: boolean;
+  sessionError: string | null;
   refresh: () => Promise<void>;
 };
 

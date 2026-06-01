@@ -1,6 +1,7 @@
 import "../../lib/load-env.js";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
+import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { admin } from "better-auth/plugins";
 import { getDb } from "../../server/db/client";
 import * as schema from "../../server/db/schema";
@@ -26,5 +27,6 @@ export const auth = betterAuth({
       defaultRole: "learner",
       adminRoles: ["admin"],
     }),
+    tanstackStartCookies(),
   ],
 });

@@ -1,9 +1,19 @@
 import type { LearnerState } from "../../features/gamification/engine";
 
+type ApiErrorBody = { error?: string; code?: string; retryable?: boolean };
+
+async function readApiError(response: Response): Promise<string> {
+  const data = (await response.json().catch(() => ({}))) as ApiErrorBody;
+  if (response.status === 503 && data.code === "DATABASE_UNAVAILABLE") {
+    return data.error ?? "Database is busy. Wait a moment and try again.";
+  }
+  return data.error ?? `Request failed (${response.status})`;
+}
+
 export async function fetchProgress(): Promise<LearnerState | null> {
   const response = await fetch("/api/progress", { credentials: "include" });
   if (response.status === 401) return null;
-  if (!response.ok) throw new Error("Failed to load progress");
+  if (!response.ok) throw new Error(await readApiError(response));
   return (await response.json()) as LearnerState;
 }
 
@@ -17,7 +27,7 @@ export async function patchProgress(patch: {
     credentials: "include",
     body: JSON.stringify(patch),
   });
-  if (!response.ok) throw new Error("Failed to patch progress");
+  if (!response.ok) throw new Error(await readApiError(response));
   return (await response.json()) as LearnerState;
 }
 
@@ -28,7 +38,7 @@ export async function saveProgress(state: LearnerState): Promise<void> {
     credentials: "include",
     body: JSON.stringify(state),
   });
-  if (!response.ok) throw new Error("Failed to save progress");
+  if (!response.ok) throw new Error(await readApiError(response));
 }
 
 export async function submitQuiz(moduleId: string, answers: number[]): Promise<{
@@ -42,7 +52,7 @@ export async function submitQuiz(moduleId: string, answers: number[]): Promise<{
     credentials: "include",
     body: JSON.stringify({ moduleId, answers }),
   });
-  if (!response.ok) throw new Error("Failed to submit quiz");
+  if (!response.ok) throw new Error(await readApiError(response));
   return (await response.json()) as { score: number; passed: boolean; state: LearnerState };
 }
 
@@ -53,7 +63,7 @@ export async function submitChallengePass(moduleId: string): Promise<LearnerStat
     credentials: "include",
     body: JSON.stringify({ moduleId }),
   });
-  if (!response.ok) throw new Error("Failed to save challenge progress");
+  if (!response.ok) throw new Error(await readApiError(response));
   const data = (await response.json()) as { state: LearnerState };
   return data.state;
 }

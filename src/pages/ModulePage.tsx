@@ -1,8 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { AppShell } from "../components/layout/AppShell";
+import { BeginnerGuide } from "../components/learn/BeginnerGuide";
 import { CodeWorkspace } from "../components/learn/CodeWorkspace";
+import { ModuleProgressBar } from "../components/learn/ModuleProgressBar";
 import { LoadingButton } from "../components/ui/LoadingButton";
 import { useModules } from "../db/collections/useModules";
 import { patchProgress, submitChallengePass, submitQuiz } from "../db/collections/progress";
@@ -17,31 +19,36 @@ export function ModulePage() {
   const queryClient = useQueryClient();
   const { data: modules = [] } = useModules();
   const { data: state, refetch } = useProgress(Boolean(user));
-  const visitedRef = useRef(false);
   const [answers, setAnswers] = useState<Record<string, number>>({});
-  const [code, setCode] = useState("");
   const [submitMessage, setSubmitMessage] = useState("");
   const [quizSubmitting, setQuizSubmitting] = useState(false);
   const [quizPassed, setQuizPassed] = useState(false);
+  const [lessonViewed, setLessonViewed] = useState(false);
 
   const module = useMemo(() => modules.find((m) => m.id === moduleId), [modules, moduleId]);
+  const moduleIndex = useMemo(
+    () => (module ? modules.findIndex((m) => m.id === module.id) + 1 : 0),
+    [modules, module]
+  );
   const completed = state?.completedModuleIds ?? [];
   const unlocked = module ? canUnlockModule(module, completed) : false;
   const challengeDone = module && state ? isChallengePassed(state, module.id) : false;
+  const quizDone = module ? completed.includes(module.id) : false;
   const nextModuleId = module ? getNextModuleId(module.id, modules) : null;
 
   useEffect(() => {
-    if (module) setCode(module.challenge.starterCode);
-  }, [module]);
+    if (!module) return;
+    setAnswers({});
+    setSubmitMessage("");
+    setQuizPassed(false);
+    setLessonViewed(false);
+  }, [moduleId, module]);
 
   useEffect(() => {
-    if (!user || !moduleId || visitedRef.current) return;
-    visitedRef.current = true;
+    if (!user || !moduleId) return;
     void patchProgress({ lastVisitedModuleId: moduleId })
       .then(() => queryClient.invalidateQueries({ queryKey: ["progress"] }))
-      .catch(() => {
-        /* DB unavailable — continue locally */
-      });
+      .catch(() => {});
   }, [user, moduleId, queryClient]);
 
   async function handleSaveChallenge() {
@@ -66,8 +73,10 @@ export function ModulePage() {
           ? `Passed with ${result.score}%.`
           : `Score ${result.score}%. Need ${module.passScore}% to pass.`
       );
-    } catch {
-      setSubmitMessage("Could not submit quiz. Check /api/health and database.");
+    } catch (err) {
+      setSubmitMessage(
+        err instanceof Error ? err.message : "Could not submit quiz. Check /api/health and database.",
+      );
     } finally {
       setQuizSubmitting(false);
     }
@@ -93,6 +102,7 @@ export function ModulePage() {
 
   const lessonPanel = (
     <div className="p-4">
+      <BeginnerGuide module={module} />
       <p className="mb-4 text-[var(--muted)]">{module.lesson.content}</p>
       <p className="mb-2 text-sm font-medium">Objectives</p>
       <ul className="mb-4 list-inside list-disc text-sm text-[var(--muted)]">
@@ -100,6 +110,13 @@ export function ModulePage() {
           <li key={o}>{o}</li>
         ))}
       </ul>
+      <button
+        type="button"
+        className="btn btn-ghost mb-3 text-sm"
+        onClick={() => setLessonViewed(true)}
+      >
+        {lessonViewed ? "✓ Lesson reviewed" : "Mark lesson as read"}
+      </button>
       <pre className="lesson-example">{module.lesson.example}</pre>
       <p className="mt-3 text-xs text-[var(--muted)]">
         Reference:{" "}
@@ -156,10 +173,7 @@ export function ModulePage() {
 
   return (
     <AppShell user={user}>
-      <header className="course-header mb-6">
-        <Link to="/learn" className="mb-2 inline-block text-sm text-[var(--muted)] hover:text-white">
-          ← Courses
-        </Link>
+      <header className="course-header mb-4">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="badge mb-2">{module.track} • {module.difficulty}</p>
@@ -168,10 +182,18 @@ export function ModulePage() {
         </div>
       </header>
 
+      <ModuleProgressBar
+        moduleIndex={moduleIndex}
+        totalModules={modules.length}
+        lessonDone={lessonViewed || challengeDone}
+        taskDone={challengeDone}
+        quizDone={quizDone}
+      />
+
       <CodeWorkspace
+        key={moduleId}
+        moduleId={moduleId}
         challenge={module.challenge}
-        code={code}
-        onCodeChange={setCode}
         challengeDone={challengeDone}
         onSaveChallenge={handleSaveChallenge}
         lessonPanel={lessonPanel}

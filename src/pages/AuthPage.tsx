@@ -7,7 +7,7 @@ import { useAuth } from "../hooks/useAuth";
 
 type Mode = "signin" | "signup";
 
-export function AuthPage({ mode }: { mode: Mode }) {
+export function AuthPage({ mode, afterAuthTo = "/dashboard" }: { mode: Mode; afterAuthTo?: string }) {
   const navigate = useNavigate();
   const { user, refresh } = useAuth();
   const [name, setName] = useState("Learner");
@@ -23,7 +23,7 @@ export function AuthPage({ mode }: { mode: Mode }) {
       if (mode === "signup") await signUp(name, email, password);
       else await signIn(email, password);
       await refresh();
-      navigate({ to: "/dashboard" });
+      navigate({ to: afterAuthTo });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Authentication failed");
     } finally {

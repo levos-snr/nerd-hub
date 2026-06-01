@@ -1,3 +1,5 @@
+import { fetchSessionWithRetry } from "./session-fetch";
+
 export type AuthUser = {
   id: string;
   email: string;
@@ -28,13 +30,25 @@ function mapAuthError(status: number, body: string): string {
   return body || `Request failed (${status})`;
 }
 
+function isHtmlResponse(response: Response, text: string): boolean {
+  const ct = response.headers.get("content-type") ?? "";
+  return ct.includes("text/html") || text.trimStart().startsWith("<!DOCTYPE") || text.trimStart().startsWith("<html");
+}
+
 async function parseResponse(response: Response): Promise<void> {
   const text = await response.text();
+  if (isHtmlResponse(response, text)) {
+    throw new Error(
+      response.status === 404
+        ? "Auth API is unavailable (404). Restart the dev server after pulling latest changes."
+        : "Auth API returned an unexpected HTML response. Check server logs and GET /api/health.",
+    );
+  }
   let data: { message?: string; error?: string; code?: string } = {};
   try {
     data = JSON.parse(text) as typeof data;
   } catch {
-    data = { message: text };
+    data = { message: text.slice(0, 200) };
   }
   if (!response.ok) {
     const raw = data.message ?? data.error ?? data.code ?? text;
@@ -43,10 +57,9 @@ async function parseResponse(response: Response): Promise<void> {
 }
 
 export async function getSession(): Promise<AuthUser | null> {
-  const response = await fetch("/api/auth/get-session", { credentials: "include" });
-  if (response.status === 401) return null;
-  const data = await response.json().catch(() => null) as { user?: AuthUser } | null;
-  return data?.user ?? null;
+  const result = await fetchSessionWithRetry();
+  if (result.status === "authenticated") return result.user;
+  return null;
 }
 
 export async function signUp(name: string, email: string, password: string): Promise<void> {

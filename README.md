@@ -11,7 +11,7 @@ Gamified JavaScript + TypeScript learning platform with production auth, Postgre
 | Auth | Better Auth (email/password, DB sessions) |
 | Database | Neon Postgres (serverless) |
 | ORM | Drizzle ORM |
-| Hosting | Vercel (static frontend + serverless `/api/*`) |
+| Hosting | Vercel (TanStack Start + Nitro) |
 
 ## Features
 
@@ -114,9 +114,9 @@ pnpm db:promote-admin
 
 ### B. Import project in Vercel
 
-- Framework preset: **Vite**
+- Framework preset: **Other** (TanStack Start + Nitro)
 - Build command: `pnpm build`
-- Output directory: `dist`
+- Output directory: `.vercel/output` (set automatically via `vercel.json`)
 - Install command: `pnpm install`
 
 ### C. Add Vercel Environment Variables
@@ -141,7 +141,7 @@ Or use Neon SQL editor and run `drizzle/0000_initial.sql`.
 
 ### E. Deploy
 
-Vercel auto-deploys on push. API routes are served from `/api/*`.
+Vercel auto-deploys on push. The Nitro server handles SSR and `/api/*` routes.
 
 ---
 

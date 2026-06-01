@@ -139,6 +139,53 @@ body {
 .play-btn { transition: transform 0.12s; }
 .play-btn:hover { transform: scale(1.06); }
 
+.test-console {
+  border-top: 1px solid var(--border);
+  background: #080a0f;
+  max-height: 200px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.test-console-title {
+  padding: 0.5rem 1rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.test-console-body {
+  padding: 0.5rem 1rem;
+  overflow-y: auto;
+  font-family: ui-monospace, monospace;
+  font-size: 0.75rem;
+  flex: 1;
+}
+
+.test-log {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.test-log-time { color: var(--muted); min-width: 4.5rem; }
+.test-log-pass { color: var(--accent); }
+.test-log-fail { color: var(--danger); }
+.test-log-run { color: #93c5fd; }
+.test-log-info { color: var(--muted); }
+
+.welcome-banner {
+  position: relative;
+  background: linear-gradient(135deg, #1a1d26 0%, #12141a 100%);
+}
+
+.beginner-guide { }
+
+.module-progress { }
+
 @media (prefers-reduced-motion: reduce) {
   .btn:hover { transform: none; }
   .play-btn:hover { transform: none; }

@@ -26,6 +26,10 @@ export function buildMixedModules(): Module[] {
         content: content.summary,
         objectives: content.objectives,
         example: content.example,
+        clue:
+          difficulty === "beginner"
+            ? content.hint ?? `Start from the example, then implement solve() for ${item.title}.`
+            : content.hint,
       },
       quiz: [
         {

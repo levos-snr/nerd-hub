@@ -6,6 +6,8 @@ export type Lesson = {
   content: string;
   objectives: string[];
   example: string;
+  /** Beginner-friendly clue shown in the lesson panel */
+  clue?: string;
 };
 
 export type QuizQuestion = {
