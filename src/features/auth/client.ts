@@ -85,6 +85,8 @@ export async function signIn(email: string, password: string): Promise<void> {
 export async function signOut(): Promise<void> {
   const response = await fetch("/api/auth/sign-out", {
     method: "POST",
+    headers: { "content-type": "application/json" }, 
+    body: JSON.stringify({}),                          
     credentials: "include",
   });
   await parseResponse(response);
