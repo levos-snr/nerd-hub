@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+
 :root {
   color-scheme: dark;
   --bg: #0a0c10;
@@ -234,3 +235,5 @@ body {
   border: 1px solid var(--border);
   color: var(--muted);
 }
+
+
