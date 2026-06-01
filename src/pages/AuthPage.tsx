@@ -15,7 +15,7 @@ export function AuthPage({
   afterAuthTo?: string;
 }) {
   const navigate = useNavigate();
-  const { user, refresh } = useAuth();
+  const { refresh } = useAuth();
   const [name, setName] = useState("Learner");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("password123");
