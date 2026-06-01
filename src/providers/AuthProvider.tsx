@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
-import { getSession, type AuthUser } from "../features/auth/client";
+import type { AuthUser } from "../features/auth/client";
 import { fetchSessionWithRetry } from "../features/auth/session-fetch";
 import { AuthContext } from "./auth-context";
 

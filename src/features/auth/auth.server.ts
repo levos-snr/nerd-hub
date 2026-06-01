@@ -1,5 +1,5 @@
 import "../../lib/load-env.js";
-import { betterAuth } from "better-auth";
+import { betterAuth } from "better-auth/minimal";
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { admin } from "better-auth/plugins";

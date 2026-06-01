@@ -1,12 +1,8 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import { nitro } from "nitro/vite";
-
-const rootDir = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
@@ -17,36 +13,18 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [
       tanstackStart(),
-      nitro({
-        preset: "vercel",
-        rollupConfig: {
-          external: [
-            "better-auth",
-            "@better-auth/kysely-adapter",
-            "@better-auth/drizzle-adapter",
-            "kysely",
-          ],
-        },
-      }),
+      nitro({ preset: "vercel" }),
       react(),
       tailwindcss(),
     ],
-    resolve: {
-      alias: {
-        "@better-auth/kysely-adapter": path.join(rootDir, "src/lib/empty-module.ts"),
-      },
-    },
     server: { port: 3000 },
+    // Bundle server deps into Vercel output — externalized imports are not in /var/task/node_modules.
     ssr: {
-      external: [
+      noExternal: [
         "better-auth",
-        "better-auth/node",
-        "better-auth/tanstack-start",
-        "better-auth/plugins",
+        /^better-auth\//,
         "@better-auth/drizzle-adapter",
-        "@better-auth/kysely-adapter",
         "@better-auth/core",
-        "kysely",
         "@neondatabase/serverless",
         "postgres",
         "drizzle-orm",
