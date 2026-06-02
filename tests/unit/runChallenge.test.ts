@@ -10,18 +10,14 @@ describe("runChallenge", () => {
         { label: "a", input: 1, expected: 1 },
         { label: "b", input: "x", expected: "x" },
       ],
-      "javascript"
+      "javascript",
     );
     expect(result.passed).toBe(true);
   });
 
   it("fails on mismatch", () => {
     const code = `export function solve() { return 0; }\n`;
-    const result = runChallenge(
-      code,
-      [{ label: "one", input: null, expected: 1 }],
-      "javascript"
-    );
+    const result = runChallenge(code, [{ label: "one", input: null, expected: 1 }], "javascript");
     expect(result.passed).toBe(false);
   });
 });

@@ -4,14 +4,14 @@ Gamified JavaScript + TypeScript learning platform with production auth, Postgre
 
 ## Recommended Stack
 
-| Layer | Technology |
-|---|---|
-| Frontend | React 19 + Vite + Tailwind CSS v4 |
-| Data/Reactivity | TanStack Query + TanStack DB |
-| Auth | Better Auth (email/password, DB sessions) |
-| Database | Neon Postgres (serverless) |
-| ORM | Drizzle ORM |
-| Hosting | Vercel (TanStack Start + Nitro) |
+| Layer           | Technology                                |
+| --------------- | ----------------------------------------- |
+| Frontend        | React 19 + Vite + Tailwind CSS v4         |
+| Data/Reactivity | TanStack Query + TanStack DB              |
+| Auth            | Better Auth (email/password, DB sessions) |
+| Database        | Neon Postgres (serverless)                |
+| ORM             | Drizzle ORM                               |
+| Hosting         | Vercel (TanStack Start + Nitro)           |
 
 ## Features
 
@@ -25,14 +25,14 @@ Gamified JavaScript + TypeScript learning platform with production auth, Postgre
 
 ## App routes
 
-| Route | Description |
-|---|---|
-| `/` | Landing page |
-| `/signup`, `/signin` | Auth |
-| `/dashboard` | XP, level, streak, module stats |
-| `/learn` | Module catalog (filtered by track) |
-| `/learn/$moduleId` | Lesson, challenge, quiz |
-| `/admin` | Admin CRUD (requires `admin` role) |
+| Route                | Description                        |
+| -------------------- | ---------------------------------- |
+| `/`                  | Landing page                       |
+| `/signup`, `/signin` | Auth                               |
+| `/dashboard`         | XP, level, streak, module stats    |
+| `/learn`             | Module catalog (filtered by track) |
+| `/learn/$moduleId`   | Lesson, challenge, quiz            |
+| `/admin`             | Admin CRUD (requires `admin` role) |
 
 ---
 
@@ -123,11 +123,11 @@ pnpm db:promote-admin
 
 In Vercel Project → Settings → Environment Variables, add for **Production** and **Preview**:
 
-| Name | Value |
-|---|---|
-| `DATABASE_URL` | Neon connection string |
+| Name                 | Value                                    |
+| -------------------- | ---------------------------------------- |
+| `DATABASE_URL`       | Neon connection string                   |
 | `BETTER_AUTH_SECRET` | same secret as local (or unique per env) |
-| `BETTER_AUTH_URL` | `https://your-app.vercel.app` |
+| `BETTER_AUTH_URL`    | `https://your-app.vercel.app`            |
 
 ### D. Run DB migration against Neon
 
@@ -147,13 +147,13 @@ Vercel auto-deploys on push. The Nitro server handles SSR and `/api/*` routes.
 
 ## 4) API Endpoints
 
-| Endpoint | Method | Auth | Purpose |
-|---|---|---|---|
-| `/api/auth/*` | ALL | public | Better Auth routes (signup/signin/session) |
-| `/api/modules` | GET | public | Curriculum modules |
-| `/api/progress` | GET/PUT | required | Load/save learner state |
-| `/api/submit-quiz` | POST | required | Score quiz + update progression |
-| `/api/admin/modules` | GET/POST/PUT/DELETE | admin | Curriculum CRUD |
+| Endpoint             | Method              | Auth     | Purpose                                    |
+| -------------------- | ------------------- | -------- | ------------------------------------------ |
+| `/api/auth/*`        | ALL                 | public   | Better Auth routes (signup/signin/session) |
+| `/api/modules`       | GET                 | public   | Curriculum modules                         |
+| `/api/progress`      | GET/PUT             | required | Load/save learner state                    |
+| `/api/submit-quiz`   | POST                | required | Score quiz + update progression            |
+| `/api/admin/modules` | GET/POST/PUT/DELETE | admin    | Curriculum CRUD                            |
 
 ---
 

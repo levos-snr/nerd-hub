@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { signIn, signUp } from "../features/auth/client";
 import { useAuth } from "../hooks/useAuth";
-import  "../styles/auth.css";
+import "../styles/auth.css";
 import { Code2 } from "lucide-react";
 
 type Mode = "signin" | "signup";
@@ -43,16 +43,18 @@ export function AuthPage({
         {/*-- Left  --*/}
         <div className="auth-panel-left">
           <div className="auth-brand flex gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--accent)] text-black">
-          <Code2 size={20} />
-        </span>
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--accent)] text-black">
+              <Code2 size={20} />
+            </span>
             nerdStack
-	    <span className="auth-brand-dot">.</span>
-	    dev
+            <span className="auth-brand-dot">.</span>
+            dev
           </div>
           <div className="auth-panel-copy">
             <p className="auth-panel-headline">
-              Build real skills,<br />ship real things.
+              Build real skills,
+              <br />
+              ship real things.
             </p>
             <p className="auth-panel-sub">
               Hands-on courses, live feedback, and real projects that move the needle.
@@ -146,10 +148,7 @@ export function AuthPage({
 
           <p className="auth-switch">
             {mode === "signup" ? "Already have an account?" : "New here?"}{" "}
-            <Link
-              to={mode === "signup" ? "/signin" : "/signup"}
-              className="auth-switch-link"
-            >
+            <Link to={mode === "signup" ? "/signin" : "/signup"} className="auth-switch-link">
               {mode === "signup" ? "Sign in" : "Create account"}
             </Link>
           </p>

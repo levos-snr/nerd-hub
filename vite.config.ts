@@ -8,15 +8,11 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   process.env.DATABASE_URL = process.env.DATABASE_URL ?? env.DATABASE_URL;
   process.env.BETTER_AUTH_SECRET = process.env.BETTER_AUTH_SECRET ?? env.BETTER_AUTH_SECRET;
-  process.env.BETTER_AUTH_URL = process.env.BETTER_AUTH_URL ?? env.BETTER_AUTH_URL ?? "http://localhost:3000";
+  process.env.BETTER_AUTH_URL =
+    process.env.BETTER_AUTH_URL ?? env.BETTER_AUTH_URL ?? "http://localhost:3000";
 
   return {
-    plugins: [
-      tanstackStart(),
-      nitro({ preset: "vercel" }),
-      react(),
-      tailwindcss(),
-    ],
+    plugins: [tanstackStart(), nitro({ preset: "vercel" }), react(), tailwindcss()],
     server: { port: 3000 },
     // Bundle server deps into Vercel output — externalized imports are not in /var/task/node_modules.
     ssr: {

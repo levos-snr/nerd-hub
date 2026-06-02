@@ -13,7 +13,11 @@ function sleep(ms: number) {
 
 function isHtmlResponse(response: Response, text: string): boolean {
   const ct = response.headers.get("content-type") ?? "";
-  return ct.includes("text/html") || text.trimStart().startsWith("<!DOCTYPE") || text.trimStart().startsWith("<html");
+  return (
+    ct.includes("text/html") ||
+    text.trimStart().startsWith("<!DOCTYPE") ||
+    text.trimStart().startsWith("<html")
+  );
 }
 
 async function fetchSessionOnce(): Promise<SessionFetchResult> {

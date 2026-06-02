@@ -26,7 +26,7 @@ if (!rawDatabaseUrl) {
 
 if (!existsSync(journalPath)) {
   console.error(
-    `Missing ${journalPath}. Run "pnpm db:generate" after schema changes, or restore drizzle/meta/_journal.json.`
+    `Missing ${journalPath}. Run "pnpm db:generate" after schema changes, or restore drizzle/meta/_journal.json.`,
   );
   process.exit(1);
 }
@@ -69,11 +69,11 @@ try {
   console.error("❌ Migration failed:", formatError(error));
   if (isPoolerDatabaseUrl(rawDatabaseUrl) && driver === "neon-http") {
     console.error(
-      "Tip: keep DATABASE_URL as Neon provides it; neon-http works with pooled URLs for migrations."
+      "Tip: keep DATABASE_URL as Neon provides it; neon-http works with pooled URLs for migrations.",
     );
   } else if (isPoolerDatabaseUrl(rawDatabaseUrl)) {
     console.error(
-      "Tip: use DATABASE_DRIVER=neon-http in .env, or a direct (non-pooler) DATABASE_URL for migrations."
+      "Tip: use DATABASE_DRIVER=neon-http in .env, or a direct (non-pooler) DATABASE_URL for migrations.",
     );
   }
   process.exit(1);

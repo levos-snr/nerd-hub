@@ -12,7 +12,7 @@ export function utcYesterday(today: string): string {
 export function recordDailyActivity(
   streak: number,
   lastActivityDate: string | undefined,
-  today: string = utcToday()
+  today: string = utcToday(),
 ): { streak: number; lastActivityDate: string } {
   if (lastActivityDate === today) {
     return { streak, lastActivityDate: today };

@@ -1,7 +1,4 @@
-export function scoreQuiz(
-  questions: { answerIndex: number }[],
-  answers: number[]
-): number {
+export function scoreQuiz(questions: { answerIndex: number }[], answers: number[]): number {
   if (questions.length === 0) return 0;
   let correct = 0;
   for (let i = 0; i < questions.length; i++) {

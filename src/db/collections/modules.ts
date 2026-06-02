@@ -23,6 +23,6 @@ export const moduleCollection = createCollection(
     queryKey: ["modules"],
     queryFn: fetchModules,
     getKey: (item) => item.id,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  }) as any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  }) as any,
 );

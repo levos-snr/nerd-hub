@@ -18,7 +18,7 @@ export function useModules() {
       queryFn: fetchModules,
       staleTime: 30_000,
     },
-    queryClient
+    queryClient,
   );
 }
 

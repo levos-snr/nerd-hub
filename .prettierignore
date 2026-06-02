@@ -1,0 +1,11 @@
+# Mirrors .gitignore + generated files
+node_modules
+dist
+.vercel
+.output
+.vercel/output
+test-results
+playwright-report
+pnpm-lock.yaml
+src/routeTree.gen.ts
+*.log

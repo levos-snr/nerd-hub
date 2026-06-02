@@ -9,11 +9,7 @@ type Props = {
 
 export function AppShell({ user, children, variant = "app" }: Props) {
   if (variant === "marketing" || !user) {
-    return (
-      <div className="mx-auto min-h-screen max-w-7xl px-4 pb-10 pt-4 md:px-6">
-        {children}
-      </div>
-    );
+    return <div className="mx-auto min-h-screen max-w-7xl px-4 pb-10 pt-4 md:px-6">{children}</div>;
   }
 
   return (

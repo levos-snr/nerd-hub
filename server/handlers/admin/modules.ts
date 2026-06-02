@@ -27,7 +27,7 @@ const moduleSchema = z.object({
       prompt: z.string(),
       options: z.array(z.string()).min(2),
       answerIndex: z.number().int().min(0),
-    })
+    }),
   ),
   challenge: z.object({
     prompt: z.string(),
@@ -38,7 +38,7 @@ const moduleSchema = z.object({
         label: z.string(),
         input: z.unknown(),
         expected: z.unknown(),
-      })
+      }),
     ),
     hint: z.string().optional(),
   }),

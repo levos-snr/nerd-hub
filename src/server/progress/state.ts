@@ -3,7 +3,8 @@ import type { learnerProgress } from "../db/schema";
 
 export function rowToLearnerState(row: typeof learnerProgress.$inferSelect): LearnerState {
   const progressJson = row.progress as Record<string, unknown>;
-  const { records, lastVisitedModuleId, challengePassedModuleIds } = parseProgressJson(progressJson);
+  const { records, lastVisitedModuleId, challengePassedModuleIds } =
+    parseProgressJson(progressJson);
 
   return {
     xp: row.xp,

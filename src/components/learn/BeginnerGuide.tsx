@@ -16,7 +16,9 @@ export function BeginnerGuide({ module }: Props) {
       {clue ? <p className="mb-3 text-sm text-[var(--muted)]">{clue}</p> : null}
       {module.lesson.example ? (
         <>
-          <p className="mb-1 text-xs font-medium uppercase tracking-wide text-[var(--muted)]">Worked example</p>
+          <p className="mb-1 text-xs font-medium uppercase tracking-wide text-[var(--muted)]">
+            Worked example
+          </p>
           <pre className="lesson-example text-xs">{module.lesson.example}</pre>
         </>
       ) : null}

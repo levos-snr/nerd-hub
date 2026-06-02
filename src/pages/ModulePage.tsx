@@ -28,7 +28,7 @@ export function ModulePage() {
   const module = useMemo(() => modules.find((m) => m.id === moduleId), [modules, moduleId]);
   const moduleIndex = useMemo(
     () => (module ? modules.findIndex((m) => m.id === module.id) + 1 : 0),
-    [modules, module]
+    [modules, module],
   );
   const completed = state?.completedModuleIds ?? [];
   const unlocked = module ? canUnlockModule(module, completed) : false;
@@ -71,11 +71,13 @@ export function ModulePage() {
       setSubmitMessage(
         result.passed
           ? `Passed with ${result.score}%.`
-          : `Score ${result.score}%. Need ${module.passScore}% to pass.`
+          : `Score ${result.score}%. Need ${module.passScore}% to pass.`,
       );
     } catch (err) {
       setSubmitMessage(
-        err instanceof Error ? err.message : "Could not submit quiz. Check /api/health and database.",
+        err instanceof Error
+          ? err.message
+          : "Could not submit quiz. Check /api/health and database.",
       );
     } finally {
       setQuizSubmitting(false);
@@ -86,7 +88,9 @@ export function ModulePage() {
     return (
       <AppShell user={user}>
         <p>Module not found.</p>
-        <Link to="/learn" className="btn btn-ghost mt-3 inline-block">Back to courses</Link>
+        <Link to="/learn" className="btn btn-ghost mt-3 inline-block">
+          Back to courses
+        </Link>
       </AppShell>
     );
   }
@@ -94,8 +98,12 @@ export function ModulePage() {
   if (!unlocked) {
     return (
       <AppShell user={user}>
-        <p className="text-[var(--danger)]">This module is locked. Complete the previous module first.</p>
-        <Link to="/learn" className="btn btn-ghost mt-3 inline-block">Back to courses</Link>
+        <p className="text-[var(--danger)]">
+          This module is locked. Complete the previous module first.
+        </p>
+        <Link to="/learn" className="btn btn-ghost mt-3 inline-block">
+          Back to courses
+        </Link>
       </AppShell>
     );
   }
@@ -154,21 +162,33 @@ export function ModulePage() {
           ))}
         </fieldset>
       ))}
-      <LoadingButton loading={quizSubmitting} loadingLabel="Submitting quiz…" onClick={() => void handleSubmitQuiz()}>
+      <LoadingButton
+        loading={quizSubmitting}
+        loadingLabel="Submitting quiz…"
+        onClick={() => void handleSubmitQuiz()}
+      >
         Submit quiz
       </LoadingButton>
       {submitMessage ? <p className="mt-3 text-sm text-indigo-200">{submitMessage}</p> : null}
       {quizPassed && nextModuleId ? (
         <div className="mt-4 flex gap-3">
-          <Link to="/learn/$moduleId" params={{ moduleId: nextModuleId }} className="btn btn-primary">
+          <Link
+            to="/learn/$moduleId"
+            params={{ moduleId: nextModuleId }}
+            className="btn btn-primary"
+          >
             Next module →
           </Link>
-          <Link to="/learn" className="btn btn-ghost">Course outline</Link>
+          <Link to="/learn" className="btn btn-ghost">
+            Course outline
+          </Link>
         </div>
       ) : null}
     </div>
   ) : (
-    <p className="p-4 text-sm text-[var(--muted)]">Pass the Task tests and submit to unlock the quiz.</p>
+    <p className="p-4 text-sm text-[var(--muted)]">
+      Pass the Task tests and submit to unlock the quiz.
+    </p>
   );
 
   return (
@@ -176,7 +196,9 @@ export function ModulePage() {
       <header className="course-header mb-4">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="badge mb-2">{module.track} • {module.difficulty}</p>
+            <p className="badge mb-2">
+              {module.track} • {module.difficulty}
+            </p>
             <h1 className="text-2xl font-bold uppercase tracking-tight">{module.title}</h1>
           </div>
         </div>

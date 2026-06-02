@@ -1,10 +1,10 @@
 import type { TopicContent } from "./topicTypes";
 import { tsProWorkshopTopics, w3JavaScriptTopics, w3TypeScriptTopics } from "./w3syllabus";
 
-
 export const w3ExerciseRegistry: Record<string, Partial<TopicContent>> = {
   "JS Tutorial": {
-    summary: "JavaScript powers interactive web pages. You run it in the browser console or in .js files loaded by HTML.",
+    summary:
+      "JavaScript powers interactive web pages. You run it in the browser console or in .js files loaded by HTML.",
     example: `console.log("Hello from JavaScript!");\nconst year = new Date().getFullYear();\nconsole.log(year);`,
     challengePrompt: "Return the string 'Hello from JavaScript!'",
     starterCodeJs: `export function solve() {\n  return "";\n}\n`,
@@ -12,7 +12,8 @@ export const w3ExerciseRegistry: Record<string, Partial<TopicContent>> = {
     tests: [{ label: "greeting", input: null, expected: "Hello from JavaScript!" }],
   },
   "JS Syntax": {
-    summary: "JavaScript statements end with semicolons. Use const for values that won't be reassigned, let when they will.",
+    summary:
+      "JavaScript statements end with semicolons. Use const for values that won't be reassigned, let when they will.",
     example: `const PI = 3.14;\nlet count = 0;\ncount += 1;`,
     challengePrompt: "Given [a, b], return their sum.",
     tests: [
@@ -22,7 +23,8 @@ export const w3ExerciseRegistry: Record<string, Partial<TopicContent>> = {
     starterCodeJs: `export function solve(pair) {\n  const [a, b] = pair;\n  return 0;\n}\n`,
   },
   "JS Operators": {
-    summary: "Arithmetic (+, -, *, /), comparison (===, !==), and logical (&&, ||) operators combine values and conditions.",
+    summary:
+      "Arithmetic (+, -, *, /), comparison (===, !==), and logical (&&, ||) operators combine values and conditions.",
     example: `const ok = 5 > 3 && 2 === 2;\nconst total = 10 + 5 * 2; // 20`,
     challengePrompt: "Input: [a, op, b]. op is '+', '-', '*', or '/'. Return the result.",
     tests: [
@@ -32,7 +34,8 @@ export const w3ExerciseRegistry: Record<string, Partial<TopicContent>> = {
     starterCodeJs: `export function solve([a, op, b]) {\n  return null;\n}\n`,
   },
   "JS If Conditions": {
-    summary: "if/else runs code when conditions are true. Use === for equality; remember 0, '', null, undefined are falsy.",
+    summary:
+      "if/else runs code when conditions are true. Use === for equality; remember 0, '', null, undefined are falsy.",
     example: `function grade(score) {\n  if (score >= 70) return "pass";\n  return "fail";\n}`,
     challengePrompt: "Return 'pass' if score >= 70, else 'fail'.",
     tests: [
@@ -52,14 +55,16 @@ export const w3ExerciseRegistry: Record<string, Partial<TopicContent>> = {
     starterCodeJs: `export function solve(n) {\n  return 0;\n}\n`,
   },
   "JS Functions": {
-    summary: "Functions package reusable logic. Parameters are local; return sends a value back to the caller.",
+    summary:
+      "Functions package reusable logic. Parameters are local; return sends a value back to the caller.",
     example: `function double(n) {\n  return n * 2;\n}\nconst triple = (n) => n * 3;`,
     challengePrompt: "Return name greeting: `Hello, {name}!`",
     tests: [{ label: "greet", input: "Ada", expected: "Hello, Ada!" }],
     starterCodeJs: `export function solve(name) {\n  return "";\n}\n`,
   },
   "JS Arrays": {
-    summary: "Arrays are ordered lists. map, filter, and reduce are the workhorses of array transformation.",
+    summary:
+      "Arrays are ordered lists. map, filter, and reduce are the workhorses of array transformation.",
     example: `const nums = [1, 2, 3];\nconst doubled = nums.map((n) => n * 2);`,
     challengePrompt: "Return the sum of all numbers in the array.",
     tests: [
@@ -69,14 +74,16 @@ export const w3ExerciseRegistry: Record<string, Partial<TopicContent>> = {
     starterCodeJs: `export function solve(values) {\n  return 0;\n}\n`,
   },
   "TS Introduction": {
-    summary: "TypeScript is a typed superset of JavaScript. Types catch mistakes before runtime and improve editor tooling.",
+    summary:
+      "TypeScript is a typed superset of JavaScript. Types catch mistakes before runtime and improve editor tooling.",
     example: `let username: string = "learner";\nlet level: number = 1;`,
     challengePrompt: "Return the input string (typed exercise).",
     tests: [{ label: "echo", input: "TS", expected: "TS" }],
     starterCodeTs: `export function solve(value: string): string {\n  return "";\n}\n`,
   },
   "TS Simple Types": {
-    summary: "Annotate primitives: string, number, boolean, bigint, symbol. TypeScript validates assignments at compile time.",
+    summary:
+      "Annotate primitives: string, number, boolean, bigint, symbol. TypeScript validates assignments at compile time.",
     example: `const active: boolean = true;\nconst price: number = 9.99;`,
     challengePrompt: "Return true if n is positive.",
     tests: [
@@ -86,7 +93,8 @@ export const w3ExerciseRegistry: Record<string, Partial<TopicContent>> = {
     starterCodeTs: `export function solve(n: number): boolean {\n  return false;\n}\n`,
   },
   "TS Union Types": {
-    summary: "A union type is A | B — the value can be either. Narrow with typeof or discriminant properties before use.",
+    summary:
+      "A union type is A | B — the value can be either. Narrow with typeof or discriminant properties before use.",
     example: `type Result = { ok: true; data: string } | { ok: false; error: string };`,
     challengePrompt: "If input is string return its length; if number return String(n).length.",
     tests: [

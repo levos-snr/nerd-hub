@@ -1,6 +1,9 @@
 import { asc, eq } from "drizzle-orm";
 import { defaultModules } from "../../features/curriculum/buildModules";
-import { normalizeModule, setDefaultModulesLookup } from "../../features/curriculum/normalizeModule";
+import {
+  normalizeModule,
+  setDefaultModulesLookup,
+} from "../../features/curriculum/normalizeModule";
 import type { Module } from "../../features/curriculum/types";
 
 setDefaultModulesLookup(defaultModules);
@@ -49,7 +52,11 @@ export async function getModuleById(id: string): Promise<Module | undefined> {
 
 export async function upsertModule(module: Module, orderIndex: number): Promise<void> {
   await runDb(async (db) => {
-    const [existing] = await db.select().from(modulesTable).where(eq(modulesTable.id, module.id)).limit(1);
+    const [existing] = await db
+      .select()
+      .from(modulesTable)
+      .where(eq(modulesTable.id, module.id))
+      .limit(1);
     const values = {
       id: module.id,
       track: module.track,

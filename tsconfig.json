@@ -11,5 +11,14 @@
     "noEmit": true,
     "types": ["vite/client", "vitest/globals"]
   },
-  "include": ["src", "server", "tests", "vite.config.ts", "eslint.config.js", "playwright.config.ts", "vitest.e2e.config.ts", "drizzle.config.ts"]
+  "include": [
+    "src",
+    "server",
+    "tests",
+    "vite.config.ts",
+    "eslint.config.js",
+    "playwright.config.ts",
+    "vitest.e2e.config.ts",
+    "drizzle.config.ts"
+  ]
 }

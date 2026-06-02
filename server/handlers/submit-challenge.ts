@@ -1,7 +1,11 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { randomUUID } from "node:crypto";
 import { eq } from "drizzle-orm";
-import { canUnlockModule, createInitialState, markChallengePassed } from "../../src/features/gamification/engine";
+import {
+  canUnlockModule,
+  createInitialState,
+  markChallengePassed,
+} from "../../src/features/gamification/engine";
 import { getSessionUser } from "../../src/server/auth/session";
 import { applyRateLimit, sanitizeModuleIdPayload } from "../../src/server/security/apiGuard";
 import { respondApiError } from "../../src/server/api-errors";
@@ -51,7 +55,11 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     }
 
     const next = await runDb(async (db) => {
-      const [existing] = await db.select().from(learnerProgress).where(eq(learnerProgress.userId, user.id)).limit(1);
+      const [existing] = await db
+        .select()
+        .from(learnerProgress)
+        .where(eq(learnerProgress.userId, user.id))
+        .limit(1);
       const current = existing ? rowToLearnerState(existing) : createInitialState();
 
       if (!canUnlockModule(module, current.completedModuleIds)) {

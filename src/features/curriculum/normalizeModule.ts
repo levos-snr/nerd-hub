@@ -11,7 +11,7 @@ export function setDefaultModulesLookup(modules: Module[]): void {
 function legacyChallengeToModern(
   raw: Record<string, unknown>,
   track: Module["track"],
-  title: string
+  title: string,
 ): Challenge {
   const content = getTopicContent(title, track);
   const starterCode =
@@ -20,11 +20,11 @@ function legacyChallengeToModern(
   return {
     prompt: (typeof raw.prompt === "string" && raw.prompt) || content.challengePrompt,
     starterCode,
-    language:
-      raw.language === "typescript" || raw.language === "javascript"
-        ? raw.language
-        : track,
-    tests: Array.isArray(raw.tests) && raw.tests.length > 0 ? (raw.tests as Challenge["tests"]) : content.tests,
+    language: raw.language === "typescript" || raw.language === "javascript" ? raw.language : track,
+    tests:
+      Array.isArray(raw.tests) && raw.tests.length > 0
+        ? (raw.tests as Challenge["tests"])
+        : content.tests,
     hint: typeof raw.hint === "string" ? raw.hint : content.hint,
   };
 }
@@ -39,13 +39,11 @@ export function normalizeModule(raw: Module): Module {
 
   const challenge = needsFix
     ? legacyChallengeToModern(challengeRaw ?? {}, raw.track, raw.title)
-  : raw.challenge;
+    : raw.challenge;
 
   return {
     ...raw,
-    lesson: raw.lesson?.content
-      ? raw.lesson
-      : (fallback?.lesson ?? raw.lesson),
+    lesson: raw.lesson?.content ? raw.lesson : (fallback?.lesson ?? raw.lesson),
     quiz: raw.quiz?.length >= 3 ? raw.quiz : (fallback?.quiz ?? raw.quiz),
     challenge,
   };

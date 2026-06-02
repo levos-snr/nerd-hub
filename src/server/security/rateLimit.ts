@@ -17,7 +17,10 @@ export function rateLimit(key: string): { allowed: boolean; retryAfterSec?: numb
   return { allowed: true };
 }
 
-export function clientRateLimitKey(req: { socket?: { remoteAddress?: string | null }; headers?: Record<string, string | string[] | undefined> }): string {
+export function clientRateLimitKey(req: {
+  socket?: { remoteAddress?: string | null };
+  headers?: Record<string, string | string[] | undefined>;
+}): string {
   const forwarded = req.headers?.["x-forwarded-for"];
   const ip =
     (typeof forwarded === "string" ? forwarded.split(",")[0]?.trim() : undefined) ??

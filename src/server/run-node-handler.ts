@@ -54,7 +54,7 @@ export async function runNodeHandler(handler: NodeApiHandler, request: Request):
           new Response(body, {
             status: statusCode,
             headers: outHeaders,
-          })
+          }),
         );
       },
     } as ServerResponse;

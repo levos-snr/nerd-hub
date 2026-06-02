@@ -11,6 +11,6 @@ export function useProgress(enabled: boolean) {
       enabled,
       staleTime: 10_000,
     },
-    queryClient
+    queryClient,
   );
 }

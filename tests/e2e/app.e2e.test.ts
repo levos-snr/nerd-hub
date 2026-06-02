@@ -18,7 +18,7 @@ describe("e2e learner flow smoke", () => {
           return new Response(JSON.stringify(null), { status: 200 });
         }
         return new Response(JSON.stringify({ error: "not found" }), { status: 404 });
-      })
+      }),
     );
   });
 
@@ -29,9 +29,7 @@ describe("e2e learner flow smoke", () => {
     render(React.createElement(RouterProvider, { router }));
 
     await waitFor(() => {
-      expect(
-        screen.getByText(/Learn JavaScript and TypeScript together/i)
-      ).toBeInTheDocument();
+      expect(screen.getByText(/Learn JavaScript and TypeScript together/i)).toBeInTheDocument();
     });
     expect(screen.getByRole("link", { name: /start learning/i })).toBeInTheDocument();
   });

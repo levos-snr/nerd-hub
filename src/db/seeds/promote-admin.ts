@@ -11,7 +11,11 @@ if (!email) {
 
 const db = getDb();
 await db.update(user).set({ role: "admin", updatedAt: new Date() }).where(eq(user.email, email));
-const updated = await db.select({ email: user.email }).from(user).where(eq(user.email, email)).limit(1);
+const updated = await db
+  .select({ email: user.email })
+  .from(user)
+  .where(eq(user.email, email))
+  .limit(1);
 if (updated.length === 0) {
   console.error(`No user found for ${email}`);
   process.exit(1);

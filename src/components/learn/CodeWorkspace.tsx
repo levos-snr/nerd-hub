@@ -9,7 +9,11 @@ export type { TestLogEntry };
 type Tab = "lesson" | "task" | "quiz";
 
 function nowTime() {
-  return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+  return new Date().toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
 }
 
 function newLog(type: TestLogEntry["type"], message: string): TestLogEntry {
@@ -58,14 +62,14 @@ export function CodeWorkspace({
       const nextLogs = out.results.map((r) =>
         newLog(
           r.passed ? "pass" : "fail",
-          `${r.label}: ${r.passed ? "PASSED" : "FAILED"} — ${r.message}`
-        )
+          `${r.label}: ${r.passed ? "PASSED" : "FAILED"} — ${r.message}`,
+        ),
       );
       setLogs((prev) => [...prev, ...nextLogs]);
       setMessage(
         out.passed
           ? "All tests passed! Submit to unlock the quiz."
-          : `${out.results.filter((r) => !r.passed).length} test(s) failed.`
+          : `${out.results.filter((r) => !r.passed).length} test(s) failed.`,
       );
     } catch (error) {
       const msg = error instanceof Error ? error.message : "Run failed";
@@ -150,10 +154,19 @@ export function CodeWorkspace({
             aria-label="Code editor"
           />
           <div className="editor-actions">
-            <LoadingButton variant="ghost" loading={running} loadingLabel="Running tests…" onClick={() => void handleRun()}>
+            <LoadingButton
+              variant="ghost"
+              loading={running}
+              loadingLabel="Running tests…"
+              onClick={() => void handleRun()}
+            >
               Run tests
             </LoadingButton>
-            <LoadingButton loading={saving} loadingLabel="Submitting…" onClick={() => void handleSubmit()}>
+            <LoadingButton
+              loading={saving}
+              loadingLabel="Submitting…"
+              onClick={() => void handleSubmit()}
+            >
               Submit
             </LoadingButton>
           </div>

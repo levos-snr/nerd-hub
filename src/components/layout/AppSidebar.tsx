@@ -16,7 +16,10 @@ export function AppSidebar({ user }: Props) {
 
   return (
     <aside className="sidebar flex w-[240px] shrink-0 flex-col border-r border-[var(--border)] bg-[var(--surface)]">
-      <Link to="/" className="flex items-center gap-2 border-b border-[var(--border)] px-5 py-5 font-semibold">
+      <Link
+        to="/"
+        className="flex items-center gap-2 border-b border-[var(--border)] px-5 py-5 font-semibold"
+      >
         <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[var(--accent)] text-black">
           <Code2 size={20} />
         </span>
@@ -37,7 +40,7 @@ export function AppSidebar({ user }: Props) {
             </Link>
           );
         })}
-        {(user?.role === "admin" || user?.role === "owner") ? (
+        {user?.role === "admin" || user?.role === "owner" ? (
           <Link
             to="/admin"
             className={`sidebar-link flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm ${pathname === "/admin" ? "sidebar-link-active" : ""}`}

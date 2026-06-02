@@ -24,7 +24,7 @@ export function resolveDatabaseDriver(url: string): DatabaseDriver {
 
 export function resolveDatabaseUrl(
   url: string,
-  options?: { forMigrations?: boolean; driver?: DatabaseDriver }
+  options?: { forMigrations?: boolean; driver?: DatabaseDriver },
 ): string {
   const driver = options?.driver ?? resolveDatabaseDriver(url);
   if (driver === "postgres" && (options?.forMigrations || isPoolerDatabaseUrl(url))) {

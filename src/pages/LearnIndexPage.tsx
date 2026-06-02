@@ -26,9 +26,12 @@ export function LearnIndexPage() {
     <AppShell user={user}>
       <header className="course-header mb-8">
         <p className="badge mb-2">W3Schools-aligned syllabus</p>
-        <h1 className="mb-2 text-3xl font-bold uppercase tracking-tight">JavaScript & TypeScript</h1>
+        <h1 className="mb-2 text-3xl font-bold uppercase tracking-tight">
+          JavaScript & TypeScript
+        </h1>
         <p className="max-w-2xl text-[var(--muted)]">
-          Real lessons, coding tasks with automated tests, and quizzes — structured like W3Schools JS/TS tutorials.
+          Real lessons, coding tasks with automated tests, and quizzes — structured like W3Schools
+          JS/TS tutorials.
         </p>
         <div className="mt-4 flex flex-wrap gap-4 text-sm text-[var(--muted)]">
           <span>{jsCount} JS modules</span>
@@ -64,9 +67,13 @@ export function LearnIndexPage() {
               </div>
               <div className="min-w-0 flex-1">
                 <h2 className="truncate font-semibold">{module.title}</h2>
-                <p className="text-sm text-[var(--muted)]">{module.track} • {module.difficulty}</p>
+                <p className="text-sm text-[var(--muted)]">
+                  {module.track} • {module.difficulty}
+                </p>
               </div>
-              <span className="badge shrink-0">{passed ? "Done" : unlocked ? "Open" : "Locked"}</span>
+              <span className="badge shrink-0">
+                {passed ? "Done" : unlocked ? "Open" : "Locked"}
+              </span>
               {unlocked ? (
                 <Link
                   to="/learn/$moduleId"

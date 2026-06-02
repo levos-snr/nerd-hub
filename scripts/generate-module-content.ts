@@ -1,15 +1,20 @@
 import type { TopicContent } from "../src/features/curriculum/topicTypes";
 import { w3ExerciseRegistry } from "../src/features/curriculum/w3Exercises";
 
-const topicOutlines: Record<string, { summary: string; exampleJs: string; exampleTs: string; challenge: string }> = {
+const topicOutlines: Record<
+  string,
+  { summary: string; exampleJs: string; exampleTs: string; challenge: string }
+> = {
   "JS Operators": {
-    summary: "Operators perform arithmetic, comparison, and logical work on values. Master +, ===, &&, and ?? for predictable code.",
+    summary:
+      "Operators perform arithmetic, comparison, and logical work on values. Master +, ===, &&, and ?? for predictable code.",
     exampleJs: "const a = 10, b = 3;\nconsole.log(a + b, a === b, a > b);",
     exampleTs: "const a = 10, b = 3;\nconsole.log(a + b, a === b, a > b);",
     challenge: "applyOp",
   },
   "JS Loops": {
-    summary: "Loops repeat work: for, while, for...of, and for...in each fit different data shapes.",
+    summary:
+      "Loops repeat work: for, while, for...of, and for...in each fit different data shapes.",
     exampleJs: "for (const n of [1, 2, 3]) console.log(n * 2);",
     exampleTs: "const nums = [1, 2, 3];\nnums.forEach((n) => console.log(n * 2));",
     challenge: "sumUntil",
@@ -27,7 +32,10 @@ function outlineFor(title: string) {
   );
 }
 
-export function generateTopicContent(title: string, track: "javascript" | "typescript"): TopicContent {
+export function generateTopicContent(
+  title: string,
+  track: "javascript" | "typescript",
+): TopicContent {
   const registry = w3ExerciseRegistry[title];
   if (registry) {
     const o = outlineFor(title);
@@ -35,7 +43,10 @@ export function generateTopicContent(title: string, track: "javascript" | "types
     return {
       ...base,
       ...registry,
-      example: registry.example ?? (track === "javascript" ? (registry as { example?: string }).example : base.example) ?? base.example,
+      example:
+        registry.example ??
+        (track === "javascript" ? (registry as { example?: string }).example : base.example) ??
+        base.example,
       starterCodeJs: registry.starterCodeJs ?? base.starterCodeJs,
       starterCodeTs: registry.starterCodeTs ?? base.starterCodeTs,
       tests: registry.tests ?? base.tests,
@@ -49,7 +60,7 @@ export function generateTopicContent(title: string, track: "javascript" | "types
 function buildFromOutline(
   title: string,
   track: "javascript" | "typescript",
-  o: ReturnType<typeof outlineFor>
+  o: ReturnType<typeof outlineFor>,
 ): TopicContent {
   const summary = o.summary;
 
@@ -118,9 +129,13 @@ function buildFromOutline(
     },
     quizQ3: {
       prompt: `How does ${title} help when moving from JS to TS?`,
-      options: ["It does not", "Shared mental models transfer", "Only for CSS", "Only on the server"],
+      options: [
+        "It does not",
+        "Shared mental models transfer",
+        "Only for CSS",
+        "Only on the server",
+      ],
       answerIndex: 1,
     },
   };
 }
-

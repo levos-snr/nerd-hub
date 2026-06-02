@@ -1,4 +1,10 @@
-const TRANSIENT_CODES = new Set(["ETIMEDOUT", "ECONNREFUSED", "ECONNRESET", "EAI_AGAIN", "ENOTFOUND"]);
+const TRANSIENT_CODES = new Set([
+  "ETIMEDOUT",
+  "ECONNREFUSED",
+  "ECONNRESET",
+  "EAI_AGAIN",
+  "ENOTFOUND",
+]);
 const TRANSIENT_FRAGMENTS = [
   "fetch failed",
   "connection terminated",

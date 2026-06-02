@@ -34,19 +34,19 @@ export function canUnlockModule(module: Module, completedModuleIds: string[]): b
   return module.prerequisites.every((id) => completedModuleIds.includes(id));
 }
 
-export function registerAttempt(
-  state: LearnerState,
-  module: Module,
-  score: number
-): LearnerState {
+export function registerAttempt(state: LearnerState, module: Module, score: number): LearnerState {
   const passed = score >= module.passScore;
   const existing = state.progress[module.id];
   const attempts = (existing?.attempts ?? 0) + 1;
   const bestScore = Math.max(existing?.bestScore ?? 0, score);
-  const progress = { ...state.progress, [module.id]: { moduleId: module.id, bestScore, passed, attempts } };
-  const completedModuleIds = passed && !state.completedModuleIds.includes(module.id)
-    ? [...state.completedModuleIds, module.id]
-    : state.completedModuleIds;
+  const progress = {
+    ...state.progress,
+    [module.id]: { moduleId: module.id, bestScore, passed, attempts },
+  };
+  const completedModuleIds =
+    passed && !state.completedModuleIds.includes(module.id)
+      ? [...state.completedModuleIds, module.id]
+      : state.completedModuleIds;
   const xp = state.xp + (passed ? 100 : 25);
   const level = Math.floor(xp / 500) + 1;
   const daily = recordDailyActivity(state.streak, state.lastActivityDate, utcToday());

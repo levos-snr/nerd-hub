@@ -15,7 +15,7 @@ export function getResumeModuleId(
   modules: Module[],
   completedModuleIds: string[],
   lastVisitedModuleId?: string,
-  state?: LearnerState | null
+  state?: LearnerState | null,
 ): string | null {
   if (!hasLearningActivity(state ?? null)) {
     return null;

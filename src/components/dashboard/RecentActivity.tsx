@@ -12,7 +12,10 @@ export function RecentActivity({
   return (
     <ul className="space-y-2 text-sm">
       {records.map(({ moduleId, record }) => (
-        <li key={moduleId} className="flex justify-between rounded-lg border border-[var(--border)] px-3 py-2">
+        <li
+          key={moduleId}
+          className="flex justify-between rounded-lg border border-[var(--border)] px-3 py-2"
+        >
           <span>{moduleId}</span>
           <span className={record.passed ? "text-emerald-300" : "text-[var(--muted)]"}>
             Best {record.bestScore}% • {record.attempts} attempt{record.attempts === 1 ? "" : "s"}

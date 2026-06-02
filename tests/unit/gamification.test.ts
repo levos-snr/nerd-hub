@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { createInitialState, registerAttempt, canUnlockModule } from "../../src/features/gamification/engine";
+import {
+  createInitialState,
+  registerAttempt,
+  canUnlockModule,
+} from "../../src/features/gamification/engine";
 import { utcToday } from "../../src/features/gamification/dailyStreak";
 import { curriculumModules } from "../../src/features/curriculum/modules";
 

@@ -3,10 +3,7 @@ import { scoreQuiz } from "../../src/features/assessment/quiz";
 
 describe("quiz scoring", () => {
   it("returns 100 for all correct answers", () => {
-    const score = scoreQuiz(
-      [{ answerIndex: 1 }, { answerIndex: 0 }],
-      [1, 0]
-    );
+    const score = scoreQuiz([{ answerIndex: 1 }, { answerIndex: 0 }], [1, 0]);
     expect(score).toBe(100);
   });
 

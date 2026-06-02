@@ -29,7 +29,10 @@ function stripExport(code: string): string {
   return code.replace(/^\s*export\s+/gm, "");
 }
 
-function compileSolve(code: string, language: "javascript" | "typescript"): (input: unknown) => unknown {
+function compileSolve(
+  code: string,
+  language: "javascript" | "typescript",
+): (input: unknown) => unknown {
   const body = stripExport(code);
   const wrapped =
     language === "typescript"
@@ -43,7 +46,7 @@ function compileSolve(code: string, language: "javascript" | "typescript"): (inp
 export function runChallenge(
   userCode: string,
   tests: ChallengeTest[] | undefined,
-  language: "javascript" | "typescript"
+  language: "javascript" | "typescript",
 ): ChallengeRunResult {
   const safeTests = tests ?? [];
   if (safeTests.length === 0) {
@@ -53,7 +56,8 @@ export function runChallenge(
         {
           label: "Setup",
           passed: false,
-          message: "No tests defined for this module. Run pnpm db:sync-modules to refresh curriculum.",
+          message:
+            "No tests defined for this module. Run pnpm db:sync-modules to refresh curriculum.",
         },
       ],
     };

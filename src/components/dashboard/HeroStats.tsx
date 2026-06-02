@@ -14,9 +14,7 @@ export function HeroStats({ stats, loading }: { stats: Stat[]; loading: boolean 
           transition={{ delay: i * 0.06, duration: 0.35 }}
         >
           <p className="text-sm text-[var(--muted)]">{stat.label}</p>
-          <p className={`text-2xl font-bold ${stat.accent ?? ""}`}>
-            {loading ? "…" : stat.value}
-          </p>
+          <p className={`text-2xl font-bold ${stat.accent ?? ""}`}>{loading ? "…" : stat.value}</p>
         </motion.article>
       ))}
     </section>

@@ -8,7 +8,7 @@ async function handleAuth(request: Request) {
 const methods = ["GET", "POST", "PUT", "PATCH", "DELETE"] as const;
 
 const handlers = Object.fromEntries(
-  methods.map((method) => [method, ({ request }: { request: Request }) => handleAuth(request)])
+  methods.map((method) => [method, ({ request }: { request: Request }) => handleAuth(request)]),
 ) as Record<(typeof methods)[number], (ctx: { request: Request }) => Promise<Response>>;
 
 export const Route = createFileRoute("/api/auth/$")({

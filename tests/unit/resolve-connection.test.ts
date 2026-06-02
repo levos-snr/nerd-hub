@@ -9,8 +9,7 @@ import {
 
 const neonPooler =
   "postgresql://user:pass@ep-abc-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require";
-const neonDirect =
-  "postgresql://user:pass@ep-abc.us-east-2.aws.neon.tech/neondb?sslmode=require";
+const neonDirect = "postgresql://user:pass@ep-abc.us-east-2.aws.neon.tech/neondb?sslmode=require";
 const local = "postgresql://user:pass@localhost:5432/app";
 
 describe("resolve-connection", () => {
@@ -33,8 +32,8 @@ describe("resolve-connection", () => {
   });
 
   it("uses direct URL for postgres migrations on pooler", () => {
-    expect(
-      resolveDatabaseUrl(neonPooler, { forMigrations: true, driver: "postgres" })
-    ).toBe(neonDirect);
+    expect(resolveDatabaseUrl(neonPooler, { forMigrations: true, driver: "postgres" })).toBe(
+      neonDirect,
+    );
   });
 });

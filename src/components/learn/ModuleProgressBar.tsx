@@ -8,7 +8,13 @@ type Props = {
   quizDone: boolean;
 };
 
-export function ModuleProgressBar({ moduleIndex, totalModules, lessonDone, taskDone, quizDone }: Props) {
+export function ModuleProgressBar({
+  moduleIndex,
+  totalModules,
+  lessonDone,
+  taskDone,
+  quizDone,
+}: Props) {
   const coursePct = totalModules > 0 ? Math.round((moduleIndex / totalModules) * 100) : 0;
   const steps = [
     { label: "Lesson", done: lessonDone },
@@ -16,7 +22,7 @@ export function ModuleProgressBar({ moduleIndex, totalModules, lessonDone, taskD
     { label: "Quiz", done: quizDone },
   ];
   const stepPct = Math.round(
-    ((lessonDone ? 1 : 0) + (taskDone ? 1 : 0) + (quizDone ? 1 : 0)) / 3 * 100
+    (((lessonDone ? 1 : 0) + (taskDone ? 1 : 0) + (quizDone ? 1 : 0)) / 3) * 100,
   );
 
   return (

@@ -64,7 +64,7 @@ export function AdminPage() {
 
   const sorted = useMemo(
     () => [...modules].sort((a, b) => a.title.localeCompare(b.title)),
-    [modules]
+    [modules],
   );
 
   const loadLearners = useCallback(async () => {
@@ -190,7 +190,9 @@ export function AdminPage() {
   return (
     <AppShell user={user}>
       <h1 className="mb-2 text-3xl font-bold">Admin</h1>
-      <p className="mb-4 text-sm text-[var(--muted)]">Full CRUD for modules, learners, and catalog tools.</p>
+      <p className="mb-4 text-sm text-[var(--muted)]">
+        Full CRUD for modules, learners, and catalog tools.
+      </p>
 
       <div className="mb-4 flex flex-wrap gap-2">
         {(["modules", "learners", "tools"] as const).map((t) => (
@@ -226,19 +228,46 @@ export function AdminPage() {
             <div className="glass mb-6 max-h-[70vh] space-y-3 overflow-y-auto p-4">
               <h2 className="text-lg font-semibold">Edit module</h2>
               <div className="grid gap-3 md:grid-cols-2">
-                <input className="input" placeholder="ID" value={editing.id} onChange={(e) => setEditing({ ...editing, id: e.target.value })} />
-                <input className="input" placeholder="Title" value={editing.title} onChange={(e) => setEditing({ ...editing, title: e.target.value })} />
-                <select className="input" value={editing.track} onChange={(e) => setEditing({ ...editing, track: e.target.value as Module["track"] })}>
+                <input
+                  className="input"
+                  placeholder="ID"
+                  value={editing.id}
+                  onChange={(e) => setEditing({ ...editing, id: e.target.value })}
+                />
+                <input
+                  className="input"
+                  placeholder="Title"
+                  value={editing.title}
+                  onChange={(e) => setEditing({ ...editing, title: e.target.value })}
+                />
+                <select
+                  className="input"
+                  value={editing.track}
+                  onChange={(e) =>
+                    setEditing({ ...editing, track: e.target.value as Module["track"] })
+                  }
+                >
                   <option value="javascript">javascript</option>
                   <option value="typescript">typescript</option>
                 </select>
-                <select className="input" value={editing.difficulty} onChange={(e) => setEditing({ ...editing, difficulty: e.target.value as Module["difficulty"] })}>
+                <select
+                  className="input"
+                  value={editing.difficulty}
+                  onChange={(e) =>
+                    setEditing({ ...editing, difficulty: e.target.value as Module["difficulty"] })
+                  }
+                >
                   <option value="beginner">beginner</option>
                   <option value="intermediate">intermediate</option>
                   <option value="advanced">advanced</option>
                   <option value="pro">pro</option>
                 </select>
-                <input className="input" type="number" value={orderIndex} onChange={(e) => setOrderIndex(Number(e.target.value))} />
+                <input
+                  className="input"
+                  type="number"
+                  value={orderIndex}
+                  onChange={(e) => setOrderIndex(Number(e.target.value))}
+                />
                 <input
                   className="input"
                   placeholder="Prerequisites (comma ids)"
@@ -246,16 +275,57 @@ export function AdminPage() {
                   onChange={(e) =>
                     setEditing({
                       ...editing,
-                      prerequisites: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
+                      prerequisites: e.target.value
+                        .split(",")
+                        .map((s) => s.trim())
+                        .filter(Boolean),
                     })
                   }
                 />
               </div>
-              <textarea className="input min-h-[80px]" value={editing.lesson.content} onChange={(e) => setEditing({ ...editing, lesson: { ...editing.lesson, content: e.target.value } })} />
-              <textarea className="input min-h-[60px]" placeholder="Beginner clue" value={editing.lesson.clue ?? ""} onChange={(e) => setEditing({ ...editing, lesson: { ...editing.lesson, clue: e.target.value } })} />
-              <textarea className="input min-h-[80px] font-mono text-xs" value={editing.lesson.example} onChange={(e) => setEditing({ ...editing, lesson: { ...editing.lesson, example: e.target.value } })} />
-              <textarea className="input min-h-[60px]" placeholder="Challenge prompt" value={editing.challenge.prompt} onChange={(e) => setEditing({ ...editing, challenge: { ...editing.challenge, prompt: e.target.value } })} />
-              <textarea className="input min-h-[120px] font-mono text-xs" value={editing.challenge.starterCode} onChange={(e) => setEditing({ ...editing, challenge: { ...editing.challenge, starterCode: e.target.value } })} />
+              <textarea
+                className="input min-h-[80px]"
+                value={editing.lesson.content}
+                onChange={(e) =>
+                  setEditing({ ...editing, lesson: { ...editing.lesson, content: e.target.value } })
+                }
+              />
+              <textarea
+                className="input min-h-[60px]"
+                placeholder="Beginner clue"
+                value={editing.lesson.clue ?? ""}
+                onChange={(e) =>
+                  setEditing({ ...editing, lesson: { ...editing.lesson, clue: e.target.value } })
+                }
+              />
+              <textarea
+                className="input min-h-[80px] font-mono text-xs"
+                value={editing.lesson.example}
+                onChange={(e) =>
+                  setEditing({ ...editing, lesson: { ...editing.lesson, example: e.target.value } })
+                }
+              />
+              <textarea
+                className="input min-h-[60px]"
+                placeholder="Challenge prompt"
+                value={editing.challenge.prompt}
+                onChange={(e) =>
+                  setEditing({
+                    ...editing,
+                    challenge: { ...editing.challenge, prompt: e.target.value },
+                  })
+                }
+              />
+              <textarea
+                className="input min-h-[120px] font-mono text-xs"
+                value={editing.challenge.starterCode}
+                onChange={(e) =>
+                  setEditing({
+                    ...editing,
+                    challenge: { ...editing.challenge, starterCode: e.target.value },
+                  })
+                }
+              />
               <textarea
                 className="input min-h-[100px] font-mono text-xs"
                 value={JSON.stringify(editing.challenge.tests, null, 2)}
@@ -281,10 +351,16 @@ export function AdminPage() {
                 }}
               />
               <div className="flex gap-2">
-                <LoadingButton loading={saving} loadingLabel="Saving…" onClick={() => void saveModule()}>
+                <LoadingButton
+                  loading={saving}
+                  loadingLabel="Saving…"
+                  onClick={() => void saveModule()}
+                >
                   Save module
                 </LoadingButton>
-                <button type="button" className="btn btn-ghost" onClick={() => setEditing(null)}>Cancel</button>
+                <button type="button" className="btn btn-ghost" onClick={() => setEditing(null)}>
+                  Cancel
+                </button>
               </div>
             </div>
           ) : null}
@@ -307,9 +383,33 @@ export function AdminPage() {
                     <td className="p-3">{module.difficulty}</td>
                     <td className="p-3">
                       <div className="flex flex-wrap gap-2">
-                        <button type="button" className="btn btn-ghost" onClick={() => { setEditing(module); setOrderIndex(modules.indexOf(module)); }}>Edit</button>
-                        <LoadingButton variant="ghost" loading={duplicatingId === module.id} loadingLabel="…" onClick={() => void duplicateAsDraft(module)}>Duplicate</LoadingButton>
-                        <LoadingButton variant="ghost" className="text-[var(--danger)]" loading={deletingId === module.id} loadingLabel="…" onClick={() => void removeModule(module.id)}>Delete</LoadingButton>
+                        <button
+                          type="button"
+                          className="btn btn-ghost"
+                          onClick={() => {
+                            setEditing(module);
+                            setOrderIndex(modules.indexOf(module));
+                          }}
+                        >
+                          Edit
+                        </button>
+                        <LoadingButton
+                          variant="ghost"
+                          loading={duplicatingId === module.id}
+                          loadingLabel="…"
+                          onClick={() => void duplicateAsDraft(module)}
+                        >
+                          Duplicate
+                        </LoadingButton>
+                        <LoadingButton
+                          variant="ghost"
+                          className="text-[var(--danger)]"
+                          loading={deletingId === module.id}
+                          loadingLabel="…"
+                          onClick={() => void removeModule(module.id)}
+                        >
+                          Delete
+                        </LoadingButton>
                       </div>
                     </td>
                   </tr>
@@ -341,7 +441,12 @@ export function AdminPage() {
                   <td className="p-3">{l.level}</td>
                   <td className="p-3">{l.completedModuleIds.length}</td>
                   <td className="p-3">
-                    <LoadingButton variant="ghost" loading={resettingUserId === l.userId} loadingLabel="…" onClick={() => void resetLearner(l.userId)}>
+                    <LoadingButton
+                      variant="ghost"
+                      loading={resettingUserId === l.userId}
+                      loadingLabel="…"
+                      onClick={() => void resetLearner(l.userId)}
+                    >
                       Reset progress
                     </LoadingButton>
                   </td>
@@ -356,15 +461,30 @@ export function AdminPage() {
         <div className="glass space-y-4 p-6">
           <div>
             <h2 className="font-semibold">Sync catalog from code</h2>
-            <p className="mb-3 text-sm text-[var(--muted)]">Upserts all modules from buildModules (W3Schools syllabus). Run after content updates.</p>
-            <LoadingButton loading={syncing} loadingLabel="Syncing…" onClick={() => void syncCatalog()}>
+            <p className="mb-3 text-sm text-[var(--muted)]">
+              Upserts all modules from buildModules (W3Schools syllabus). Run after content updates.
+            </p>
+            <LoadingButton
+              loading={syncing}
+              loadingLabel="Syncing…"
+              onClick={() => void syncCatalog()}
+            >
               Run db:sync-modules
             </LoadingButton>
           </div>
           <div>
             <h2 className="font-semibold">Health check</h2>
             <p className="text-sm text-[var(--muted)]">
-              Open <a href="/api/health" className="text-[var(--accent)] underline" target="_blank" rel="noreferrer">/api/health</a> to verify database connectivity.
+              Open{" "}
+              <a
+                href="/api/health"
+                className="text-[var(--accent)] underline"
+                target="_blank"
+                rel="noreferrer"
+              >
+                /api/health
+              </a>{" "}
+              to verify database connectivity.
             </p>
           </div>
         </div>

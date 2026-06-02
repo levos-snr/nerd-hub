@@ -91,9 +91,13 @@ export function DashboardPage() {
             {started ? "Continue learning" : "Start first module"}
           </Link>
         ) : null}
-        <Link to="/learn" className="btn btn-ghost">Browse all courses</Link>
-        {(user?.role === "admin" || user?.role === "owner") ? (
-          <Link to="/admin" className="btn btn-ghost">Admin</Link>
+        <Link to="/learn" className="btn btn-ghost">
+          Browse all courses
+        </Link>
+        {user?.role === "admin" || user?.role === "owner" ? (
+          <Link to="/admin" className="btn btn-ghost">
+            Admin
+          </Link>
         ) : null}
       </section>
     </AppShell>

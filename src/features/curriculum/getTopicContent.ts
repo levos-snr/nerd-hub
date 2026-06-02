@@ -16,10 +16,7 @@ export function getTopicContent(title: string, track: "javascript" | "typescript
   if (core) {
     return {
       ...core,
-      example:
-        track === "javascript"
-          ? core.example
-          : core.example,
+      example: track === "javascript" ? core.example : core.example,
     };
   }
 

@@ -21,9 +21,9 @@ describe("curriculum navigation", () => {
 
   it("detects learning activity", () => {
     expect(hasLearningActivity(createInitialState())).toBe(false);
-    expect(
-      hasLearningActivity({ ...createInitialState(), lastVisitedModuleId: "module-1" })
-    ).toBe(true);
+    expect(hasLearningActivity({ ...createInitialState(), lastVisitedModuleId: "module-1" })).toBe(
+      true,
+    );
   });
 
   it("returns next module in order", () => {

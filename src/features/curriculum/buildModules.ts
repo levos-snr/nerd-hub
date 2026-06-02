@@ -7,9 +7,7 @@ export function buildMixedModules(): Module[] {
     const id = `module-${index + 1}`;
     const prerequisites = index === 0 ? [] : [`module-${index}`];
     const difficulty =
-      index < 20 ? "beginner" :
-      index < 45 ? "intermediate" :
-      index < 60 ? "advanced" : "pro";
+      index < 20 ? "beginner" : index < 45 ? "intermediate" : index < 60 ? "advanced" : "pro";
     const content = getTopicContent(item.title, item.track);
     const language = item.track;
 
@@ -28,7 +26,7 @@ export function buildMixedModules(): Module[] {
         example: content.example,
         clue:
           difficulty === "beginner"
-            ? content.hint ?? `Start from the example, then implement solve() for ${item.title}.`
+            ? (content.hint ?? `Start from the example, then implement solve() for ${item.title}.`)
             : content.hint,
       },
       quiz: [
@@ -47,7 +45,12 @@ export function buildMixedModules(): Module[] {
         {
           id: `${id}-q3`,
           prompt: content.quizQ3?.prompt ?? `How does ${item.title} relate to real projects?`,
-          options: content.quizQ3?.options ?? ["It does not", "You apply it in code", "Only design", "Only tests"],
+          options: content.quizQ3?.options ?? [
+            "It does not",
+            "You apply it in code",
+            "Only design",
+            "Only tests",
+          ],
           answerIndex: content.quizQ3?.answerIndex ?? 1,
         },
       ],

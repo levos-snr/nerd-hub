@@ -50,7 +50,11 @@ export function runDb<T>(fn: (database: AppDb) => Promise<T>): Promise<T> {
   return withDbRetry(async () => fn(getDb()));
 }
 
-export async function checkDbConnection(): Promise<{ ok: boolean; error?: string; driver?: string }> {
+export async function checkDbConnection(): Promise<{
+  ok: boolean;
+  error?: string;
+  driver?: string;
+}> {
   try {
     return await withDbRetry(async () => {
       const rawUrl = process.env.DATABASE_URL;

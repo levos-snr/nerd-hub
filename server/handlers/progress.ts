@@ -34,7 +34,11 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
 
     if (req.method === "GET") {
       const state = await runDb(async (db) => {
-        const [row] = await db.select().from(learnerProgress).where(eq(learnerProgress.userId, user.id)).limit(1);
+        const [row] = await db
+          .select()
+          .from(learnerProgress)
+          .where(eq(learnerProgress.userId, user.id))
+          .limit(1);
         return row ? rowToLearnerState(row) : createInitialState();
       });
       json(res, 200, state);
@@ -49,7 +53,11 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       }
 
       const next = await runDb(async (db) => {
-        const [existing] = await db.select().from(learnerProgress).where(eq(learnerProgress.userId, user.id)).limit(1);
+        const [existing] = await db
+          .select()
+          .from(learnerProgress)
+          .where(eq(learnerProgress.userId, user.id))
+          .limit(1);
         const current = existing ? rowToLearnerState(existing) : createInitialState();
         const updated: LearnerState = {
           ...current,
@@ -83,7 +91,11 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       }
       const payload = await readJsonBody<LearnerState>(req);
       await runDb(async (db) => {
-        const [existing] = await db.select().from(learnerProgress).where(eq(learnerProgress.userId, user.id)).limit(1);
+        const [existing] = await db
+          .select()
+          .from(learnerProgress)
+          .where(eq(learnerProgress.userId, user.id))
+          .limit(1);
         if (!existing) {
           await db.insert(learnerProgress).values({
             id: randomUUID(),

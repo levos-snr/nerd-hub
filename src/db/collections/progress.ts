@@ -41,7 +41,10 @@ export async function saveProgress(state: LearnerState): Promise<void> {
   if (!response.ok) throw new Error(await readApiError(response));
 }
 
-export async function submitQuiz(moduleId: string, answers: number[]): Promise<{
+export async function submitQuiz(
+  moduleId: string,
+  answers: number[],
+): Promise<{
   score: number;
   passed: boolean;
   state: LearnerState;

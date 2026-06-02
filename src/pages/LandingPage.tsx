@@ -5,19 +5,49 @@ import { useAuth } from "../hooks/useAuth";
 import "../styles/landing.css";
 
 const JS_TOPICS = [
-  "JS Tutorial", "JS Syntax", "JS Operators", "JS If Conditions",
-  "JS Loops", "JS Strings", "JS Functions", "JS Objects",
-  "JS Arrays", "JS Scope", "JS Classes", "JS Async",
-  "JS Modules", "JS DOM", "JS Web API", "JS AJAX",
-  "JS JSON", "JS Advanced", "JS Debugging", "JS Projects",
+  "JS Tutorial",
+  "JS Syntax",
+  "JS Operators",
+  "JS If Conditions",
+  "JS Loops",
+  "JS Strings",
+  "JS Functions",
+  "JS Objects",
+  "JS Arrays",
+  "JS Scope",
+  "JS Classes",
+  "JS Async",
+  "JS Modules",
+  "JS DOM",
+  "JS Web API",
+  "JS AJAX",
+  "JS JSON",
+  "JS Advanced",
+  "JS Debugging",
+  "JS Projects",
 ];
 
 const TS_TOPICS = [
-  "TS Introduction", "TS Simple Types", "TS Inference", "TS Special Types",
-  "TS Arrays", "TS Tuples", "TS Object Types", "TS Functions",
-  "TS Classes", "TS Enums", "TS Generics", "TS Utility Types",
-  "TS Union Types", "TS Mapped Types", "TS Decorators", "TS Async",
-  "TS React", "TS Node.js", "TS Best Practices", "TS Capstone",
+  "TS Introduction",
+  "TS Simple Types",
+  "TS Inference",
+  "TS Special Types",
+  "TS Arrays",
+  "TS Tuples",
+  "TS Object Types",
+  "TS Functions",
+  "TS Classes",
+  "TS Enums",
+  "TS Generics",
+  "TS Utility Types",
+  "TS Union Types",
+  "TS Mapped Types",
+  "TS Decorators",
+  "TS Async",
+  "TS React",
+  "TS Node.js",
+  "TS Best Practices",
+  "TS Capstone",
 ];
 
 export function LandingPage() {
@@ -27,7 +57,6 @@ export function LandingPage() {
   return (
     <AppShell user={user} variant="marketing">
       <div className="landing">
-
         <section className="land-hero">
           {/* background */}
           <div className="land-blob land-blob-1" />
@@ -48,9 +77,8 @@ export function LandingPage() {
             </h1>
 
             <p className="land-lead">
-              Stop context-switching between courses. nerdStack weaves JavaScript
-              and TypeScript into one cohesive path — so every new concept clicks
-              with the last.
+              Stop context-switching between courses. nerdStack weaves JavaScript and TypeScript
+              into one cohesive path — so every new concept clicks with the last.
             </p>
 
             <div className="land-cta-row">
@@ -92,9 +120,9 @@ export function LandingPage() {
               <div className="land-card-icon">⚡</div>
               <p className="land-card-title">Interleaved JS + TS path</p>
               <p className="land-card-body">
-                Most courses teach JS and TS separately. Ours alternate them so
-                every TypeScript concept immediately reinforces what you just wrote
-                in JavaScript. The result? Concepts stick 2× faster.
+                Most courses teach JS and TS separately. Ours alternate them so every TypeScript
+                concept immediately reinforces what you just wrote in JavaScript. The result?
+                Concepts stick 2× faster.
               </p>
             </div>
 
@@ -102,8 +130,8 @@ export function LandingPage() {
               <div className="land-card-icon">🖥️</div>
               <p className="land-card-title">In-browser code editor</p>
               <p className="land-card-body">
-                Write, run, and get instant test feedback without leaving the lesson.
-                No setup, no installs.
+                Write, run, and get instant test feedback without leaving the lesson. No setup, no
+                installs.
               </p>
             </div>
 
@@ -112,8 +140,8 @@ export function LandingPage() {
               <div className="land-card-icon">🧠</div>
               <p className="land-card-title">Quizzes gate the next module</p>
               <p className="land-card-body">
-                You only move forward when you're genuinely ready. No skipping —
-                just real comprehension checks.
+                You only move forward when you're genuinely ready. No skipping — just real
+                comprehension checks.
               </p>
             </div>
 
@@ -121,8 +149,8 @@ export function LandingPage() {
               <div className="land-card-icon">🏆</div>
               <p className="land-card-title">XP &amp; progression</p>
               <p className="land-card-body">
-                Earn XP for every lesson and challenge you complete. Watch your level
-                climb as your skills grow.
+                Earn XP for every lesson and challenge you complete. Watch your level climb as your
+                skills grow.
               </p>
             </div>
 
@@ -130,8 +158,8 @@ export function LandingPage() {
               <div className="land-card-icon">🔷</div>
               <p className="land-card-title">TypeScript from day&nbsp;one</p>
               <p className="land-card-body">
-                Not an afterthought — TS is woven in from lesson 2. By the end you'll
-                think in types naturally.
+                Not an afterthought — TS is woven in from lesson 2. By the end you'll think in types
+                naturally.
               </p>
             </div>
 
@@ -139,8 +167,7 @@ export function LandingPage() {
               <div className="land-card-icon">⚙️</div>
               <p className="land-card-title">Production stack</p>
               <p className="land-card-body">
-                TanStack Router, Better Auth, Neon Postgres, Vercel — the same stack
-                the pros use.
+                TanStack Router, Better Auth, Neon Postgres, Vercel — the same stack the pros use.
               </p>
             </div>
           </div>
@@ -170,7 +197,9 @@ export function LandingPage() {
 
           <div className={`land-pills${activeTrack === "js" ? " land-pills--js" : ""}`}>
             {(activeTrack === "js" ? JS_TOPICS : TS_TOPICS).map((t) => (
-              <span className="land-pill" key={t}>{t}</span>
+              <span className="land-pill" key={t}>
+                {t}
+              </span>
             ))}
           </div>
         </section>
@@ -192,8 +221,16 @@ export function LandingPage() {
               </span>
             </div>
             <div className="land-terminal-body">
-              <div><span className="term-line-comment">{"// Challenge: type a generic identity function"}</span></div>
-              <div><span className="term-line-comment">{"// Hint: use <T> to preserve the input type"}</span></div>
+              <div>
+                <span className="term-line-comment">
+                  {"// Challenge: type a generic identity function"}
+                </span>
+              </div>
+              <div>
+                <span className="term-line-comment">
+                  {"// Hint: use <T> to preserve the input type"}
+                </span>
+              </div>
               <div>&nbsp;</div>
               <div>
                 <span className="term-line-kw">function </span>
@@ -204,7 +241,9 @@ export function LandingPage() {
                 <span className="term-line-kw">return </span>
                 <span style={{ color: "#e2e8f0" }}>value;</span>
               </div>
-              <div><span style={{ color: "#e2e8f0" }}>{"}"}</span></div>
+              <div>
+                <span style={{ color: "#e2e8f0" }}>{"}"}</span>
+              </div>
               <div>&nbsp;</div>
               <div>
                 <span className="term-line-kw">const </span>
@@ -215,15 +254,15 @@ export function LandingPage() {
                 <span style={{ color: "#e2e8f0" }}>);</span>
               </div>
               <div>&nbsp;</div>
-              <div><span className="term-line-pass">✓ All 3 tests passed · +50 XP earned</span></div>
+              <div>
+                <span className="term-line-pass">✓ All 3 tests passed · +50 XP earned</span>
+              </div>
             </div>
           </div>
         </section>
 
         <div className="land-cta-banner">
-          <h2 className="land-cta-banner-title">
-            Ready to write your first line?
-          </h2>
+          <h2 className="land-cta-banner-title">Ready to write your first line?</h2>
           <p className="land-cta-banner-sub">
             Join free and start your first lesson in under 60 seconds.
           </p>
@@ -236,7 +275,6 @@ export function LandingPage() {
             </Link>
           </div>
         </div>
-
       </div>
     </AppShell>
   );
