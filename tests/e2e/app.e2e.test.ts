@@ -25,12 +25,12 @@ describe("e2e learner flow smoke", () => {
   it("renders landing page via TanStack Router", async () => {
     const router = getRouter();
     await router.navigate({ to: "/" });
-
     render(React.createElement(RouterProvider, { router }));
 
     await waitFor(() => {
-      expect(screen.getByText(/Learn JavaScript and TypeScript together/i)).toBeInTheDocument();
+      expect(screen.getByText(/zero to deployed/i)).toBeInTheDocument();
     });
-    expect(screen.getByRole("link", { name: /start learning/i })).toBeInTheDocument();
+
+    expect(screen.getByRole("link", { name: /start learning free/i })).toBeInTheDocument();
   });
 });

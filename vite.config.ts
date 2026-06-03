@@ -31,6 +31,8 @@ export default defineConfig(({ mode }) => {
       setupFiles: ["./tests/setup.ts"],
       include: ["tests/unit/**/*.test.ts", "tests/integration/**/*.test.ts"],
       exclude: ["tests/e2e/**"],
+      pool: "forks",
+      teardownTimeout: 5000,
     },
   };
 });

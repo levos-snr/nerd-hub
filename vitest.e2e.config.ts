@@ -3,7 +3,6 @@ import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vitest/config";
 
-/** E2E smoke tests — router plugin only (no code splitting / no duplicate `hot` injection). */
 export default defineConfig({
   plugins: [
     tanstackRouter({
@@ -18,5 +17,10 @@ export default defineConfig({
     setupFiles: ["./tests/setup.ts"],
     include: ["tests/e2e/**/*.test.ts"],
     pool: "forks",
+    server: {
+      deps: {
+        inline: ["react", "react-dom"],
+      },
+    },
   },
 });

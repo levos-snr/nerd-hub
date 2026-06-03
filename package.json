@@ -83,6 +83,6 @@
   },
   "lint-staged": {
     "**/*.{ts,tsx,js,jsx,json,css,md,yaml,yml}": "prettier --write --ignore-unknown",
-    "**/*.{ts,tsx,js,jsx}": "eslint --fix --max-warnings=0"
+    "**/*.{ts,tsx,js,jsx}": "eslint --fix --max-warnings=0 --no-warn-ignored"
   }
 }
