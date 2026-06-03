@@ -1,6 +1,4 @@
-import type { IncomingMessage } from "node:http";
 import { createHash } from "node:crypto";
-import { toHeaders } from "../api-utils";
 import { DbUnavailableError, isTransientDbError, withDbRetry } from "../db/retry";
 
 async function getAuth() {
@@ -16,12 +14,11 @@ export type SessionUser = {
 };
 
 type SessionCacheEntry = { user: SessionUser; expiresAt: number };
-
 const SESSION_CACHE_MS = 15_000;
 const sessionCache = new Map<string, SessionCacheEntry>();
 
-function sessionCacheKey(req: IncomingMessage): string | null {
-  const cookie = req.headers.cookie;
+function sessionCacheKey(headers: Headers): string | null {
+  const cookie = headers.get("cookie");
   if (!cookie) return null;
   const match = /better-auth\.session_token=([^;]+)/.exec(cookie);
   if (!match?.[1]) return null;
@@ -44,15 +41,14 @@ function writeCachedSession(key: string | null, user: SessionUser | null) {
   sessionCache.set(key, { user, expiresAt: Date.now() + SESSION_CACHE_MS });
 }
 
-export async function getSessionUser(req: IncomingMessage): Promise<SessionUser | null> {
-  const cacheKey = sessionCacheKey(req);
+export async function getSessionUser(request: Request): Promise<SessionUser | null> {
+  const cacheKey = sessionCacheKey(request.headers);
   const cached = readCachedSession(cacheKey);
   if (cached !== undefined) return cached;
-
   try {
     const user = await withDbRetry(async () => {
       const auth = await getAuth();
-      const session = await auth.api.getSession({ headers: toHeaders(req) });
+      const session = await auth.api.getSession({ headers: request.headers });
       if (!session?.user) return null;
       const role = (session.user as { role?: string }).role ?? "learner";
       return {
@@ -62,7 +58,6 @@ export async function getSessionUser(req: IncomingMessage): Promise<SessionUser 
         role,
       };
     });
-
     writeCachedSession(cacheKey, user);
     return user;
   } catch (error) {

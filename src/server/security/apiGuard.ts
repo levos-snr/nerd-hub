@@ -1,16 +1,20 @@
-import type { IncomingMessage, ServerResponse } from "node:http";
-import { json } from "../api-utils";
 import { clientRateLimitKey, rateLimit } from "./rateLimit";
 
-export function applyRateLimit(req: IncomingMessage, res: ServerResponse): boolean {
-  const key = `${clientRateLimitKey(req)}:${req.url?.split("?")[0] ?? "/"}`;
+export function applyRateLimit(request: Request): Response | null {
+  const forwarded = request.headers.get("x-forwarded-for");
+  const ip = forwarded?.split(",")[0]?.trim() ?? "unknown";
+  const key = `${clientRateLimitKey({ headers: { "x-forwarded-for": ip } })}:${new URL(request.url).pathname}`;
   const result = rateLimit(key);
   if (!result.allowed) {
-    res.setHeader("Retry-After", String(result.retryAfterSec ?? 60));
-    json(res, 429, { error: "Too many requests. Please slow down." });
-    return false;
+    return new Response(JSON.stringify({ error: "Too many requests. Please slow down." }), {
+      status: 429,
+      headers: {
+        "Content-Type": "application/json",
+        "Retry-After": String(result.retryAfterSec ?? 60),
+      },
+    });
   }
-  return true;
+  return null;
 }
 
 const MODULE_ID_RE = /^module-\d+$/;

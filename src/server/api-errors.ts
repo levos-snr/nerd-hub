@@ -1,15 +1,21 @@
-import type { ServerResponse } from "node:http";
 import { DbUnavailableError } from "./db/retry";
-import { json } from "./api-utils";
 
-export function respondApiError(res: ServerResponse, error: unknown, fallback: string): void {
+function jsonResponse(status: number, payload: unknown): Response {
+  return new Response(JSON.stringify(payload), {
+    status,
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+export function respondApiError(error: unknown, fallback: string): Response {
   if (error instanceof DbUnavailableError) {
-    json(res, 503, {
+    return jsonResponse(503, {
       error: error.message,
       code: "DATABASE_UNAVAILABLE",
       retryable: true,
     });
-    return;
   }
-  json(res, 500, { error: error instanceof Error ? error.message : fallback });
+  return jsonResponse(500, {
+    error: error instanceof Error ? error.message : fallback,
+  });
 }
