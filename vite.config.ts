@@ -14,7 +14,6 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [tanstackStart(), nitro({ preset: "vercel" }), react(), tailwindcss()],
     server: { port: 3000 },
-    // Bundle server deps into Vercel output — externalized imports are not in /var/task/node_modules.
     ssr: {
       noExternal: [
         "better-auth",
