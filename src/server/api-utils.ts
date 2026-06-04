@@ -1,4 +1,4 @@
-import type { IncomingMessage } from "node:http";
+import type { IncomingMessage, ServerResponse } from "node:http";
 
 export function toHeaders(req: IncomingMessage): Headers {
   const headers = new Headers();
@@ -22,4 +22,10 @@ export function json(status: number, payload: unknown): Response {
     status,
     headers: { "Content-Type": "application/json" },
   });
+}
+
+export function nodeJson(res: ServerResponse, status: number, payload: unknown): void {
+  const body = JSON.stringify(payload);
+  res.writeHead(status, { "Content-Type": "application/json" });
+  res.end(body);
 }

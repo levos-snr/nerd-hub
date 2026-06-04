@@ -4,6 +4,7 @@ import type { NodeApiHandler } from "../../server/utils/as-node-handler";
 
 export async function runNodeHandler(handler: NodeApiHandler, request: Request): Promise<Response> {
   const url = new URL(request.url);
+
   const headers: IncomingMessage["headers"] = {};
   request.headers.forEach((value, key) => {
     headers[key] = value;
@@ -17,9 +18,7 @@ export async function runNodeHandler(handler: NodeApiHandler, request: Request):
   return new Promise((resolve, reject) => {
     const req = new Readable({
       read() {
-        if (body.length > 0) {
-          this.push(body);
-        }
+        if (body.length > 0) this.push(body);
         this.push(null);
       },
     }) as IncomingMessage;
@@ -32,7 +31,12 @@ export async function runNodeHandler(handler: NodeApiHandler, request: Request):
     const outHeaders = new Headers();
 
     const res = {
-      statusCode: 200,
+      get statusCode() {
+        return statusCode;
+      },
+      set statusCode(code: number) {
+        statusCode = code;
+      },
       setHeader(name: string, value: string | number | readonly string[]) {
         outHeaders.set(name, Array.isArray(value) ? value.join(", ") : String(value));
       },
@@ -48,16 +52,11 @@ export async function runNodeHandler(handler: NodeApiHandler, request: Request):
         }
       },
       end(payload?: string | Buffer) {
-        const body: BodyInit | null =
+        const responseBody: BodyInit | null =
           payload == null ? null : typeof payload === "string" ? payload : new Uint8Array(payload);
-        resolve(
-          new Response(body, {
-            status: statusCode,
-            headers: outHeaders,
-          }),
-        );
+        resolve(new Response(responseBody, { status: statusCode, headers: outHeaders }));
       },
-    } as ServerResponse;
+    } as unknown as ServerResponse;
 
     Promise.resolve(handler(req, res)).catch(reject);
   });
