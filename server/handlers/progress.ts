@@ -1,4 +1,3 @@
-import type { IncomingMessage, ServerResponse } from "node:http";
 import { randomUUID } from "node:crypto";
 import { and, eq } from "drizzle-orm";
 import { createInitialState, type LearnerState } from "../../src/features/gamification/engine";
@@ -13,26 +12,26 @@ import { learnerStateToRowFields, rowToLearnerState } from "../../src/server/pro
 
 type PatchPayload = { lastVisitedModuleId?: string };
 
-export default async function handler(req: IncomingMessage, res: ServerResponse) {
-  if (!applyRateLimit(req, res)) return;
+export default async function handler(request: Request): Promise<Response> {
+  const limited = applyRateLimit(request);
+  if (limited) return limited;
 
   try {
     let user;
     try {
-      user = await getSessionUser(req);
+      user = await getSessionUser(request);
     } catch (error) {
       if (error instanceof DbUnavailableError) {
-        respondApiError(res, error, "Database unavailable");
-        return;
+        return respondApiError(error, "Database unavailable");
       }
       throw error;
     }
+
     if (!user) {
-      json(res, 401, { error: "Unauthorized" });
-      return;
+      return json(401, { error: "Unauthorized" });
     }
 
-    if (req.method === "GET") {
+    if (request.method === "GET") {
       const state = await runDb(async (db) => {
         const [row] = await db
           .select()
@@ -41,15 +40,13 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
           .limit(1);
         return row ? rowToLearnerState(row) : createInitialState();
       });
-      json(res, 200, state);
-      return;
+      return json(200, state);
     }
 
-    if (req.method === "PATCH") {
-      const payload = await readJsonBody<PatchPayload>(req);
+    if (request.method === "PATCH") {
+      const payload = await readJsonBody<PatchPayload>(request);
       if (payload.lastVisitedModuleId && !isValidModuleId(payload.lastVisitedModuleId)) {
-        json(res, 400, { error: "Invalid module id" });
-        return;
+        return json(400, { error: "Invalid module id" });
       }
 
       const next = await runDb(async (db) => {
@@ -63,7 +60,6 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
           ...current,
           lastVisitedModuleId: payload.lastVisitedModuleId ?? current.lastVisitedModuleId,
         };
-
         if (!existing) {
           await db.insert(learnerProgress).values({
             id: randomUUID(),
@@ -76,20 +72,16 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
             .set({ ...learnerStateToRowFields(updated), updatedAt: new Date() })
             .where(and(eq(learnerProgress.userId, user.id), eq(learnerProgress.id, existing.id)));
         }
-
         return updated;
       });
-
-      json(res, 200, next);
-      return;
+      return json(200, next);
     }
 
-    if (req.method === "PUT") {
+    if (request.method === "PUT") {
       if (!requireAdmin(user)) {
-        json(res, 403, { error: "Only admins can bulk-update progress" });
-        return;
+        return json(403, { error: "Only admins can bulk-update progress" });
       }
-      const payload = await readJsonBody<LearnerState>(req);
+      const payload = await readJsonBody<LearnerState>(request);
       await runDb(async (db) => {
         const [existing] = await db
           .select()
@@ -109,12 +101,11 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
             .where(and(eq(learnerProgress.userId, user.id), eq(learnerProgress.id, existing.id)));
         }
       });
-      json(res, 200, { ok: true });
-      return;
+      return json(200, { ok: true });
     }
 
-    json(res, 405, { error: "Method not allowed" });
+    return json(405, { error: "Method not allowed" });
   } catch (error) {
-    respondApiError(res, error, "Progress API failed");
+    return respondApiError(error, "Progress API failed");
   }
 }

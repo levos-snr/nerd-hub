@@ -1,4 +1,4 @@
-import type { IncomingMessage, ServerResponse } from "node:http";
+import type { IncomingMessage } from "node:http";
 
 export function toHeaders(req: IncomingMessage): Headers {
   const headers = new Headers();
@@ -13,16 +13,13 @@ export function toHeaders(req: IncomingMessage): Headers {
   return headers;
 }
 
-export async function readJsonBody<T>(req: IncomingMessage): Promise<T> {
-  const chunks: Buffer[] = [];
-  for await (const chunk of req) {
-    chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk);
-  }
-  const raw = Buffer.concat(chunks).toString("utf-8");
-  return raw ? (JSON.parse(raw) as T) : ({} as T);
+export async function readJsonBody<T>(request: Request): Promise<T> {
+  return request.json() as Promise<T>;
 }
 
-export function json(res: ServerResponse, status: number, payload: unknown): void {
-  res.writeHead(status, { "content-type": "application/json" });
-  res.end(JSON.stringify(payload));
+export function json(status: number, payload: unknown): Response {
+  return new Response(JSON.stringify(payload), {
+    status,
+    headers: { "Content-Type": "application/json" },
+  });
 }

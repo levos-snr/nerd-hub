@@ -1,4 +1,3 @@
-import type { IncomingMessage, ServerResponse } from "node:http";
 import { z } from "zod";
 import type { Module } from "../../../src/features/curriculum/types";
 import { getSessionUser, requireAdmin } from "../../../src/server/auth/session";
@@ -44,51 +43,48 @@ const moduleSchema = z.object({
   }),
 });
 
-export default async function handler(req: IncomingMessage, res: ServerResponse) {
-  if (!applyRateLimit(req, res)) return;
+export default async function handler(request: Request): Promise<Response> {
+  const limited = applyRateLimit(request);
+  if (limited) return limited;
 
   try {
-    const user = await getSessionUser(req);
+    const user = await getSessionUser(request);
     if (!requireAdmin(user)) {
-      json(res, 403, { error: "Admin privileges required" });
-      return;
+      return json(403, { error: "Admin privileges required" });
     }
 
-    if (req.method === "GET") {
-      json(res, 200, { modules: await listModules() });
-      return;
+    if (request.method === "GET") {
+      return json(200, { modules: await listModules() });
     }
 
-    if (req.method === "POST") {
-      const body = await readJsonBody<{ module: Module; orderIndex?: number }>(req);
+    if (request.method === "POST") {
+      const body = await readJsonBody<{ module: Module; orderIndex?: number }>(request);
       const module = moduleSchema.parse(body.module);
       await upsertModule(module, body.orderIndex ?? 9999);
-      json(res, 201, { ok: true });
-      return;
+      return json(201, { ok: true });
     }
 
-    if (req.method === "PUT") {
-      const body = await readJsonBody<{ module: Module; orderIndex?: number }>(req);
+    if (request.method === "PUT") {
+      const body = await readJsonBody<{ module: Module; orderIndex?: number }>(request);
       const module = moduleSchema.parse(body.module);
       await upsertModule(module, body.orderIndex ?? 0);
-      json(res, 200, { ok: true });
-      return;
+      return json(200, { ok: true });
     }
 
-    if (req.method === "DELETE") {
-      const url = new URL(req.url ?? "", "http://localhost");
+    if (request.method === "DELETE") {
+      const url = new URL(request.url);
       const id = url.searchParams.get("id");
       if (!id) {
-        json(res, 400, { error: "Missing id query parameter" });
-        return;
+        return json(400, { error: "Missing id query parameter" });
       }
       await deleteModule(id);
-      json(res, 200, { ok: true });
-      return;
+      return json(200, { ok: true });
     }
 
-    json(res, 405, { error: "Method not allowed" });
+    return json(405, { error: "Method not allowed" });
   } catch (error) {
-    json(res, 500, { error: error instanceof Error ? error.message : "Admin modules API failed" });
+    return json(500, {
+      error: error instanceof Error ? error.message : "Admin modules API failed",
+    });
   }
 }

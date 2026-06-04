@@ -1,4 +1,3 @@
-import type { IncomingMessage, ServerResponse } from "node:http";
 import { randomUUID } from "node:crypto";
 import { eq } from "drizzle-orm";
 import {
@@ -18,40 +17,38 @@ import { learnerStateToRowFields, rowToLearnerState } from "../../src/server/pro
 
 type Payload = { moduleId: string };
 
-export default async function handler(req: IncomingMessage, res: ServerResponse) {
-  if (!applyRateLimit(req, res)) return;
+export default async function handler(request: Request): Promise<Response> {
+  const limited = applyRateLimit(request);
+  if (limited) return limited;
 
-  if (req.method !== "POST") {
-    json(res, 405, { error: "Method not allowed" });
-    return;
+  if (request.method !== "POST") {
+    return json(405, { error: "Method not allowed" });
   }
 
   try {
     let user;
     try {
-      user = await getSessionUser(req);
+      user = await getSessionUser(request);
     } catch (error) {
       if (error instanceof DbUnavailableError) {
-        respondApiError(res, error, "Database unavailable");
-        return;
+        return respondApiError(error, "Database unavailable");
       }
       throw error;
     }
+
     if (!user) {
-      json(res, 401, { error: "Unauthorized" });
-      return;
+      return json(401, { error: "Unauthorized" });
     }
 
-    const body = await readJsonBody<Payload>(req);
+    const body = await readJsonBody<Payload>(request);
     const moduleId = sanitizeModuleIdPayload(body.moduleId);
     if (!moduleId) {
-      json(res, 400, { error: "Invalid module id" });
-      return;
+      return json(400, { error: "Invalid module id" });
     }
+
     const module = await getModuleById(moduleId);
     if (!module) {
-      json(res, 404, { error: "Module not found" });
-      return;
+      return json(404, { error: "Module not found" });
     }
 
     const next = await runDb(async (db) => {
@@ -61,13 +58,10 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
         .where(eq(learnerProgress.userId, user.id))
         .limit(1);
       const current = existing ? rowToLearnerState(existing) : createInitialState();
-
       if (!canUnlockModule(module, current.completedModuleIds)) {
         throw Object.assign(new Error("Module is locked"), { statusCode: 403 });
       }
-
       const state = markChallengePassed(current, moduleId);
-
       if (!existing) {
         await db.insert(learnerProgress).values({
           id: randomUUID(),
@@ -80,20 +74,18 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
           .set({ ...learnerStateToRowFields(state), updatedAt: new Date() })
           .where(eq(learnerProgress.id, existing.id));
       }
-
       return state;
     });
 
-    json(res, 200, { ok: true, state: next });
+    return json(200, { ok: true, state: next });
   } catch (error) {
     const statusCode =
       error && typeof error === "object" && "statusCode" in error
         ? Number((error as { statusCode: number }).statusCode)
         : 0;
     if (statusCode === 403) {
-      json(res, 403, { error: error instanceof Error ? error.message : "Forbidden" });
-      return;
+      return json(403, { error: error instanceof Error ? error.message : "Forbidden" });
     }
-    respondApiError(res, error, "Submit challenge failed");
+    return respondApiError(error, "Submit challenge failed");
   }
 }

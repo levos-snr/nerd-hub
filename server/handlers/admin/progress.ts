@@ -1,4 +1,3 @@
-import type { IncomingMessage, ServerResponse } from "node:http";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { createInitialState } from "../../../src/features/gamification/engine";
@@ -24,19 +23,19 @@ const patchSchema = z.object({
     .optional(),
 });
 
-export default async function handler(req: IncomingMessage, res: ServerResponse) {
-  if (!applyRateLimit(req, res)) return;
+export default async function handler(request: Request): Promise<Response> {
+  const limited = applyRateLimit(request);
+  if (limited) return limited;
 
   try {
-    const admin = await getSessionUser(req);
+    const admin = await getSessionUser(request);
     if (!requireAdmin(admin)) {
-      json(res, 403, { error: "Admin privileges required" });
-      return;
+      return json(403, { error: "Admin privileges required" });
     }
 
     const db = getDb();
 
-    if (req.method === "GET") {
+    if (request.method === "GET") {
       const rows = await db
         .select({
           progressId: learnerProgress.id,
@@ -50,12 +49,11 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
         })
         .from(learnerProgress)
         .innerJoin(user, eq(learnerProgress.userId, user.id));
-      json(res, 200, { learners: rows });
-      return;
+      return json(200, { learners: rows });
     }
 
-    if (req.method === "PATCH") {
-      const body = patchSchema.parse(await readJsonBody(req));
+    if (request.method === "PATCH") {
+      const body = patchSchema.parse(await readJsonBody(request));
       const [existing] = await db
         .select()
         .from(learnerProgress)
@@ -65,20 +63,17 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
       if (body.reset) {
         const fresh = createInitialState();
         if (!existing) {
-          json(res, 404, { error: "Learner progress not found" });
-          return;
+          return json(404, { error: "Learner progress not found" });
         }
         await db
           .update(learnerProgress)
           .set({ ...learnerStateToRowFields(fresh), updatedAt: new Date() })
           .where(eq(learnerProgress.id, existing.id));
-        json(res, 200, { ok: true, state: fresh });
-        return;
+        return json(200, { ok: true, state: fresh });
       }
 
       if (!existing) {
-        json(res, 404, { error: "Learner progress not found" });
-        return;
+        return json(404, { error: "Learner progress not found" });
       }
 
       const current = rowToLearnerState(existing);
@@ -92,12 +87,13 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
         .update(learnerProgress)
         .set({ ...learnerStateToRowFields(next), updatedAt: new Date() })
         .where(eq(learnerProgress.id, existing.id));
-      json(res, 200, { ok: true, state: next });
-      return;
+      return json(200, { ok: true, state: next });
     }
 
-    json(res, 405, { error: "Method not allowed" });
+    return json(405, { error: "Method not allowed" });
   } catch (error) {
-    json(res, 500, { error: error instanceof Error ? error.message : "Admin progress API failed" });
+    return json(500, {
+      error: error instanceof Error ? error.message : "Admin progress API failed",
+    });
   }
 }
